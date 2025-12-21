@@ -9,11 +9,11 @@ let orderData = {
 };
 
 const productSizes = {
-  bouquet: ["Small", "Medium", "Large"],
-  "hand-bouquet": ["Standard", "Premium"],
-  vase: ["Small", "Medium", "Large"],
-  decoration: ["Basic", "Standard", "Premium"],
-  signature: ["Classic", "Deluxe"],
+  bouquet: ["Petite", "Midi", "Largo", "Grande", "Human size"],
+  vase: ["Petite", "Midi", "Largo", "Grande", "Gardenia"],
+  signature: ["Yoona", "Marii", "Bomi", "Bloom box", "Acrylic Bloom box"],
+  "hand-bouquet": ["Petite", "Midi", "Largo"],
+  decoration: ["Table Decoration"],
 };
 
 const productEmojis = {
