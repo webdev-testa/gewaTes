@@ -315,7 +315,7 @@ function submitOrder() {
   err.innerHTML = "";
 
   // Paste your Web App URL from Step 1 here
-  const GOOGLE_SCRIPT_URL = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzb_KW-89KZSY3_R4H_VqqOJ3Bh19Sv3aUBzpGaTUIjN7VAYjmI97WZ-DLjgol0YZ83fQ/exec";
 
   // Use fetch instead of google.script.run
   fetch(GOOGLE_SCRIPT_URL, {
