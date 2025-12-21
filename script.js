@@ -355,3 +355,29 @@ function showPage(num) {
 function updateProgressBar(num) {
   document.getElementById("progressBar").style.width = (num / 7) * 100 + "%";
 }
+
+function prepareWhatsApp() {
+  // Generate order summary
+  let message = `New Order from ${orderData.customerName} (@${orderData.instagram})\n\n`;
+  message += "Items:\n";
+  orderData.selectedProducts.forEach((prod) => {
+    prod.sizes.forEach((sz) => {
+      sz.items.forEach((it, idx) => {
+        message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Color: ${it.color}`;
+        if (it.greeting) message += ` - Greeting: "${it.greeting}"`;
+        message += "\n";
+      });
+    });
+  });
+  message += `\nDelivery: ${orderData.deliveryDate} to ${orderData.deliveryAddress}`;
+
+  // Encode message
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/6285822220904?text=${encodedMessage}`;
+
+  // Set button to open WhatsApp
+  const btn = document.getElementById("whatsappBtn");
+  btn.onclick = function() {
+    window.open(whatsappUrl, '_blank');
+  };
+}
