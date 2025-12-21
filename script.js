@@ -1,4 +1,4 @@
-// --- GLOBAL VARIABLES ---
+// Variables
 let currentPage = 1;
 let orderData = {
   customerName: "",
@@ -34,11 +34,11 @@ const colorOptions = [
   "Mixed",
 ];
 
-// --- INITIALIZATION ---
+// Init
 document.addEventListener("DOMContentLoaded", function () {
   console.log("App initialized.");
 
-  // Attach click listeners
+  // Handle click
   const cards = document.querySelectorAll("#productGrid .product-card");
   cards.forEach((card) => {
     card.addEventListener("click", function () {
@@ -50,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   updateProgressBar(1);
 });
 
-// --- NAVIGATION FUNCTIONS ---
-
+// Navigation
 function goToPage2() {
   const name = document.getElementById("customerName").value.trim();
   const instagram = document.getElementById("instagram").value.trim();
@@ -140,7 +139,6 @@ function goToPage3() {
       const itemDiv = document.createElement("div");
       itemDiv.className = "order-item";
 
-      // Build color buttons HTML
       const buttonsHtml = colorOptions
         .map(
           (color) =>
@@ -314,21 +312,19 @@ function submitOrder() {
   btn.innerText = "Processing...";
   err.innerHTML = "";
 
-  // Paste your Web App URL from Step 1 here
+  // Back End Sheet
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzb_KW-89KZSY3_R4H_VqqOJ3Bh19Sv3aUBzpGaTUIjN7VAYjmI97WZ-DLjgol0YZ83fQ/exec";
 
-  // Use fetch instead of google.script.run
+  // Append data to sheet
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     body: JSON.stringify(orderData),
-    // This allows the browser to talk to Google's server
     mode: "no-cors",
     headers: {
       "Content-Type": "application/json",
     },
   })
     .then(() => {
-      // Because of 'no-cors', we assume success if the network request finished
       prepareWhatsApp();
       showPage(7);
       btn.innerText = "Confirm Order";
@@ -357,7 +353,7 @@ function updateProgressBar(num) {
 }
 
 function prepareWhatsApp() {
-  // Generate order summary
+  // Order summary
   let message = `New Order from ${orderData.customerName} (@${orderData.instagram})\n\n`;
   message += "Items:\n";
   orderData.selectedProducts.forEach((prod) => {
@@ -375,7 +371,7 @@ function prepareWhatsApp() {
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/6285822220904?text=${encodedMessage}`;
 
-  // Set button to open WhatsApp
+  // Open WhatsApp
   const btn = document.getElementById("whatsappBtn");
   btn.onclick = function() {
     window.open(whatsappUrl, '_blank');
