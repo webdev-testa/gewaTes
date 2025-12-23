@@ -1,42 +1,3 @@
-// Variables
-let currentPage = 1;
-let orderData = {
-  customerName: "",
-  instagram: "",
-  selectedProducts: [],
-  deliveryDate: "",
-  deliveryTime: "",
-  deliveryAddress: "",
-};
-
-const productSizes = {
-  bouquet: ["Petite", "Midi", "Largo", "Grande", "Human size"],
-  vase: ["Petite", "Midi", "Largo", "Grande", "Gardenia"],
-  signature: ["Yoona", "Marii", "Bomi", "Bloom box", "Acrylic Bloom box"],
-  "hand-bouquet": ["Petite", "Midi", "Largo"],
-  decoration: ["Table Decoration"],
-};
-
-const productEmojis = {
-  bouquet: "💐",
-  "hand-bouquet": "🌹",
-  vase: "🏺",
-  decoration: "🎀",
-  signature: "✨",
-};
-
-const wrapOptions = ["Black", "White"];
-
-const vaseFlowers = ["Lily", "Anthurium", "Orchid", "Hydrangea"];
-
-const vaseLimits = {
-  "Petite": { maxTotal: 1, maxPerType: 1, allowHydrangea: false },
-  "Midi": { maxTotal: 2, maxPerType: 2, allowHydrangea: false },
-  "Largo": { maxTotal: 3, maxPerType: 3, allowHydrangea: false },
-  "Grande": { maxTotal: 4, maxPerType: 2, allowHydrangea: true },
-  "Gardenia": { maxTotal: 5, maxPerType: 3, allowHydrangea: true }
-};
-
 // Init
 document.addEventListener("DOMContentLoaded", function () {
   console.log("App initialized.");
@@ -142,192 +103,13 @@ function goToPage3() {
     return;
   }
 
-  // Branch for Vase
+  // Branch
   if (currentProduct.type === 'vase') {
     renderVasePage(currentProduct);
     return;
-  }
-
-  const specDiv = document.getElementById("orderSpecifications");
-  specDiv.innerHTML = "";
-
-  currentProduct.sizes.forEach((sizeObj, sizeIdx) => {
-    for (let i = 0; i < sizeObj.quantity; i++) {
-      const itemDiv = document.createElement("div");
-      itemDiv.className = "order-item";
-
-      // Flower Color Input
-      let colorHtml = `<div class="form-group">
-        <label>Flower Color *</label>
-        <input type="text" id="flower-color-${sizeIdx}-${i}" placeholder="Enter flower color details" />`;
-      
-      if (i > 0) {
-        colorHtml += `<div style="margin-top:4px;">
-          <input type="checkbox" id="copy-check-${sizeIdx}-${i}" onchange="copyColor(${sizeIdx}, ${i})"> 
-          <label for="copy-check-${sizeIdx}-${i}" style="display:inline; font-weight:normal;">Same color as Item #1</label>
-        </div>`;
-      }
-      colorHtml += `</div>`;
-
-      // Wrap Color Buttons
-      const wrapHtml = wrapOptions
-        .map(
-          (c) =>
-            `<button class="color-btn" onclick="selectWrap(this)">${c}</button>`
-        )
-        .join("");
-
-      itemDiv.innerHTML = `
-              <div class="order-item-header">${currentProduct.type} - ${
-        sizeObj.size
-      } (Item #${i + 1})</div>
-              
-              ${colorHtml}
-
-              <div class="form-group">
-                <label>Wrap Color *</label>
-                <div class="color-options" id="wrap-colors-${sizeIdx}-${i}">${wrapHtml}</div>
-              </div>
-
-              <div class="greeting-card">
-                <label>Greeting Card (Optional)</label>
-                <textarea rows="2" maxlength="300" id="greeting-${sizeIdx}-${i}" 
-                  placeholder="Message..." oninput="updateCharCount(this)"></textarea>
-                <div class="char-count">0/300</div>
-              </div>`;
-      specDiv.appendChild(itemDiv);
-    }
-  });
-
-  showPage(3);
-}
-
-function renderVasePage(product) {
-  const container = document.getElementById("vaseSpecifications");
-  container.innerHTML = "";
-
-  product.sizes.forEach((sizeObj, sizeIdx) => {
-    const limits = vaseLimits[sizeObj.size]; // e.g. "Petite"
-    const maxTotal = limits.maxTotal;
-    
-    for (let i = 0; i < sizeObj.quantity; i++) {
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "order-item";
-        itemDiv.innerHTML = `<div class="order-item-header">Vase - ${sizeObj.size} (Item #${i + 1})</div>`;
-
-        // Limits description
-        let limitDesc = `Max ${maxTotal} main flowers.`;
-        if (limits.maxPerType < maxTotal) limitDesc += ` (Max ${limits.maxPerType} of same type)`;
-        itemDiv.innerHTML += `<p style="font-size:14px; color:#718096; margin-bottom:12px;">${limitDesc}</p>`;
-
-        // Flower Selection
-        itemDiv.innerHTML += `<label>Main Flower Selection *</label>`;
-        vaseFlowers.forEach(flower => {
-            if (flower === "Hydrangea" && !limits.allowHydrangea) return;
-
-            itemDiv.innerHTML += `
-            <div class="size-item" style="padding: 8px; margin-bottom: 8px;">
-                <div class="size-info"><div class="size-name" style="font-size:16px;">${flower}</div></div>
-                <div class="quantity-control">
-                    <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', -1)">−</button>
-                    <div class="qty-display" id="vase-qty-${sizeIdx}-${i}-${flower}">0</div>
-                    <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', 1)">+</button>
-                </div>
-            </div>`;
-        });
-        
-        // Color
-        itemDiv.innerHTML += `
-        <div class="form-group" style="margin-top:16px;">
-            <label>Dominant Color Preference *</label>
-            <input type="text" id="vase-color-${sizeIdx}-${i}" placeholder="E.g. Paste, White, Red..." />
-        </div>`;
-
-        // Greeting Card
-        itemDiv.innerHTML += `
-        <div class="greeting-card">
-            <label>Greeting Card (Optional)</label>
-            <textarea rows="2" maxlength="300" id="vase-greeting-${sizeIdx}-${i}" 
-                placeholder="Message..." oninput="updateCharCount(this)"></textarea>
-            <div class="char-count">0/300</div>
-        </div>
-        `;
-
-        container.appendChild(itemDiv);
-    }
-  });
-
-  // Switch to page 3 vase
-  document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
-  document.getElementById("page3-vase").classList.add("active");
-  currentPage = 3; 
-  updateProgressBar(3);
-  window.scrollTo(0, 0);
-}
-
-function changeVaseQty(sizeIdx, itemIdx, flower, delta) {
-  const currentProduct = orderData.selectedProducts[orderData.selectedProducts.length - 1];
-  const sizeObj = currentProduct.sizes[sizeIdx];
-  const limits = vaseLimits[sizeObj.size];
-  
-  // We need to calculate current totals dynamically from DOM because we haven't saved state yet
-  // OR we can rely on DOM values
-  
-  // Get all flower counts for this item
-  let totalCount = 0;
-  const currentFlowerEl = document.getElementById(`vase-qty-${sizeIdx}-${itemIdx}-${flower}`);
-  let currentFlowerVal = parseInt(currentFlowerEl.textContent) || 0;
-
-  // Calculate total across all allowed flowers
-  vaseFlowers.forEach(f => {
-      if (f === "Hydrangea" && !limits.allowHydrangea) return;
-      
-      const el = document.getElementById(`vase-qty-${sizeIdx}-${itemIdx}-${f}`);
-      if (el) {
-          totalCount += parseInt(el.textContent) || 0;
-      }
-  });
-
-  // Proposed new value
-  let newVal = currentFlowerVal + delta;
-  
-  if (newVal < 0) return; // Cannot go below 0
-
-  // Check constraints if adding
-  if (delta > 0) {
-      if (totalCount >= limits.maxTotal) {
-          alert(`You can only select up to ${limits.maxTotal} main flowers for ${sizeObj.size}.`);
-          return;
-      }
-      if (newVal > limits.maxPerType) {
-           alert(`You can only select up to ${limits.maxPerType} of ${flower} for ${sizeObj.size}.`);
-           return;
-      }
-  }
-
-  // Update
-  currentFlowerEl.textContent = newVal;
-}
-
-function selectWrap(btn) {
-  btn.parentElement
-    .querySelectorAll(".color-btn")
-    .forEach((b) => b.classList.remove("selected"));
-  btn.classList.add("selected");
-}
-
-function copyColor(sizeIdx, itemIdx) {
-  const sourceInput = document.getElementById(`flower-color-${sizeIdx}-0`);
-  const targetInput = document.getElementById(`flower-color-${sizeIdx}-${itemIdx}`);
-  const checkbox = document.getElementById(`copy-check-${sizeIdx}-${itemIdx}`);
-
-  if (checkbox.checked) {
-    targetInput.value = sourceInput.value;
-    targetInput.readOnly = true;
-    targetInput.style.backgroundColor = "#f7fafc";
   } else {
-    targetInput.readOnly = false;
-    targetInput.style.backgroundColor = "";
+    renderBouquetPage(currentProduct);
+    return;
   }
 }
 
@@ -342,71 +124,14 @@ function goToPage4() {
 
   // Check if it's vase flow
   if (currentProduct.type === 'vase') {
-    currentProduct.sizes.forEach((sizeObj, sizeIdx) => {
-      sizeObj.items = [];
-      for (let i = 0; i < sizeObj.quantity; i++) {
-        const colorInput = document.getElementById(`vase-color-${sizeIdx}-${i}`);
-        const greeting = document.getElementById(`vase-greeting-${sizeIdx}-${i}`).value.trim();
-        const flowerColor = colorInput.value.trim();
-
-        // Collect Flowers
-        const selectedFlowers = {};
-        let totalFlowers = 0;
-        const limits = vaseLimits[sizeObj.size];
-
-        vaseFlowers.forEach(f => {
-           if (f === "Hydrangea" && !limits.allowHydrangea) return;
-           const el = document.getElementById(`vase-qty-${sizeIdx}-${i}-${f}`);
-           const qty = parseInt(el ? el.textContent : 0) || 0;
-           if (qty > 0) {
-               selectedFlowers[f] = qty;
-               totalFlowers += qty;
-           }
-        });
-
-        if (!flowerColor || totalFlowers === 0) {
-          allValid = false;
-        } else {
-          sizeObj.items.push({
-            color: flowerColor, // Dominant Color
-            mainFlowers: selectedFlowers,
-            greeting: greeting,
-            isVase: true
-          });
-        }
-      }
-    });
-
+    allValid = validateAndSaveVaseOrder(currentProduct);
     if (!allValid) {
       alert("Please select at least one main flower and fill in Dominant Color for every item.");
       return;
     }
   } else {
     // Standard Flow
-    currentProduct.sizes.forEach((sizeObj, sizeIdx) => {
-      sizeObj.items = [];
-      for (let i = 0; i < sizeObj.quantity; i++) {
-        const colorInput = document.getElementById(`flower-color-${sizeIdx}-${i}`);
-        const wrapContainer = document.getElementById(`wrap-colors-${sizeIdx}-${i}`);
-        const selectedWrap = wrapContainer.querySelector(".selected");
-        const greeting = document
-          .getElementById(`greeting-${sizeIdx}-${i}`)
-          .value.trim();
-
-        const flowerColor = colorInput.value.trim();
-
-        if (!flowerColor || !selectedWrap) {
-          allValid = false;
-        } else {
-          sizeObj.items.push({
-            color: flowerColor,
-            wrapColor: selectedWrap.textContent,
-            greeting: greeting,
-          });
-        }
-      }
-    });
-
+    allValid = validateAndSaveBouquetOrder(currentProduct);
     if (!allValid) {
       alert("Please fill in Flower Color and select a Wrap Color for every item.");
       return;
@@ -420,7 +145,6 @@ function goToPage4() {
   const sameDeliveryCheckbox = document.getElementById("sameDelivery");
   
   // Clear previous values if it's a new entry (or reload existing if editing?) 
-  // For simplicity, we assume linear flow or we load from currentProduct if exists
   document.getElementById("deliveryDate").value = currentProduct.delivery?.date || "";
   document.getElementById("deliveryTime").value = currentProduct.delivery?.time || "";
   document.getElementById("deliveryAddress").value = currentProduct.delivery?.address || "";
@@ -542,9 +266,6 @@ function formatName(str) {
     .join(" ");
 }
 
-// Review Mode State
-let reviewMode = {}; // Keyed by section name or product-index
-
 function toggleReviewMode(key) {
   reviewMode[key] = !reviewMode[key];
   renderReviewPage();
@@ -610,67 +331,9 @@ function renderProductBlock(prod, pIdx) {
       html += `<div class="review-item" style="${isEdit ? 'background:#fff; border:1px solid #e2e8f0;' : ''}">`;
       
       if (prod.type === 'vase') {
-          // VASE RENDER
-          const flowersStr = Object.entries(it.mainFlowers || {}).map(([k, v]) => `${k}: ${v}`).join(', ');
-          
-          if (isEdit) {
-              html += `
-                <strong>(${sz.size})</strong>
-                <div style="margin-top:8px;">
-                  <label style="font-size:14px;">Main Flowers (Read Only)</label>
-                  <div style="padding:8px; background:#f7fafc; border-radius:4px;">${flowersStr}</div>
-                </div>
-                <div style="margin-top:8px;">
-                  <label style="font-size:14px;">Dominant Color</label>
-                  <input type="text" value="${it.color}" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                    oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'color', this.value)">
-                </div>
-                <div style="margin-top:8px;">
-                  <label style="font-size:14px;">Greeting Card</label>
-                  <textarea rows="2" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                    oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'greeting', this.value)"
-                  >${it.greeting || ''}</textarea>
-                </div>`;
-          } else {
-              html += `<strong>(${sz.size})</strong><br>
-                Main Flowers: ${flowersStr}<br>
-                Dominant Color: ${it.color}`;
-              if (it.greeting) html += `<br><i>"${it.greeting}"</i>`;
-          }
-
+          html += getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       } else {
-          // STANDARD RENDER
-          if (isEdit) {
-             const wrapOpts = wrapOptions.map(c => 
-                `<option value="${c}" ${it.wrapColor === c ? 'selected' : ''}>${c}</option>`
-              ).join('');
-              
-              html += `
-                <strong>(${sz.size})</strong>
-                <div style="margin-top:8px;">
-                  <label style="font-size:14px;">Flower Color</label>
-                  <input type="text" value="${it.color}" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                    oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'color', this.value)">
-                </div>
-                <div style="margin-top:8px;">
-                  <label style="font-size:14px;">Wrap Color</label>
-                  <select style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                    onchange="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'wrapColor', this.value)">
-                    ${wrapOpts}
-                  </select>
-                </div>
-                <div style="margin-top:8px;">
-                  <label style="font-size:14px;">Greeting Card</label>
-                  <textarea rows="2" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                    oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'greeting', this.value)"
-                  >${it.greeting || ''}</textarea>
-                </div>`;
-          } else {
-            html += `<strong>(${sz.size})</strong><br>
-                Flower Color: ${it.color}<br>
-                Wrap Color: ${it.wrapColor}`;
-              if (it.greeting) html += `<br><i>"${it.greeting}"</i>`;
-          }
+          html += getBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       }
       html += `</div>`;
     });
@@ -706,8 +369,6 @@ function renderProductBlock(prod, pIdx) {
 function updateProductDelivery(pIdx, field, value) {
   orderData.selectedProducts[pIdx].delivery[field] = value;
 }
-
-
 
 function formatTime(timeStr) {
   if (!timeStr) return "";
@@ -766,26 +427,9 @@ function showPage(num) {
   
   // Handle Page 3 variants
   if (num === 3) {
-      // Logic handled in render functions often, 
-      // but if we call showPage(3) directly it implies standard page 3
-      // For vase, we usually call renderVasePage which sets #page3-vase active and updates global var
-      // So if this is called with 3, we default to #page3 (standard)
-      // BUT if we go "Back" from Page 4, we need to know which page 3 to show.
-      
-      // Heuristic: check if current product is vase
       const currentProduct = orderData.selectedProducts[orderData.selectedProducts.length - 1];
       if (currentProduct && currentProduct.type === 'vase') {
           document.getElementById('page3-vase').classList.add("active");
-          // Re-render to be safe or assuming state is DOM? 
-          // renderVasePage actually writes innerHTML -> we might lose state if we just show/hide?
-          // renderVasePage uses DOM for state... wait. 
-          // If we go Page 2 -> 3(Vase), we generate DOM. 
-          // If we go 3(Vase) -> 4 -> Back(3), we show #page3-vase. 
-          // DOM is still there? Yes, unless we cleared it.
-          // We only clear it in goToPage3/renderVasePage.
-          
-          // So just showing #page3-vase is enough.
-          
       } else {
           document.getElementById('page3').classList.add("active");
       }
