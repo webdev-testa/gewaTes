@@ -104,13 +104,13 @@ function goToPage3() {
   }
 
   // Branch
-  if (currentProduct.type === 'vase') {
+  if (currentProduct.type === "vase") {
     renderVasePage(currentProduct);
     return;
-  } else if (currentProduct.type === 'hand-bouquet') {
+  } else if (currentProduct.type === "hand-bouquet") {
     renderHandBouquetPage(currentProduct);
     return;
-  } else if (currentProduct.type === 'decoration') {
+  } else if (currentProduct.type === "decoration") {
     renderDecorationPage(currentProduct);
     return;
   } else {
@@ -129,29 +129,35 @@ function goToPage4() {
   let allValid = true;
 
   // Check if it's vase flow
-  if (currentProduct.type === 'vase') {
+  if (currentProduct.type === "vase") {
     allValid = validateAndSaveVaseOrder(currentProduct);
     if (!allValid) {
-      alert("Please select at least one main flower and fill in Dominant Color for every item.");
+      alert(
+        "Please select at least one main flower and fill in Dominant Color for every item."
+      );
       return;
     }
-  } else if (currentProduct.type === 'hand-bouquet') {
+  } else if (currentProduct.type === "hand-bouquet") {
     allValid = validateAndSaveHandBouquetOrder(currentProduct);
     if (!allValid) {
-        alert("Please select a Status and Flower Color for every item.");
-        return;
+      alert("Please select a Status and Flower Color for every item.");
+      return;
     }
-  } else if (currentProduct.type === 'decoration') {
+  } else if (currentProduct.type === "decoration") {
     allValid = validateAndSaveDecorationOrder(currentProduct);
-     if (!allValid) {
-        alert("Please fill in Warna, list of guest, and event info for every item.");
-        return;
+    if (!allValid) {
+      alert(
+        "Please fill in Warna, list of guest, and event info for every item."
+      );
+      return;
     }
   } else {
     // Standard Flow
     allValid = validateAndSaveBouquetOrder(currentProduct);
     if (!allValid) {
-      alert("Please fill in Flower Color and select a Wrap Color for every item.");
+      alert(
+        "Please fill in Flower Color and select a Wrap Color for every item."
+      );
       return;
     }
   }
@@ -161,11 +167,14 @@ function goToPage4() {
   const isFirstProduct = orderData.selectedProducts.length === 1;
   const sameDeliveryGroup = document.getElementById("sameDeliveryGroup");
   const sameDeliveryCheckbox = document.getElementById("sameDelivery");
-  
-  // Clear previous values if it's a new entry (or reload existing if editing?) 
-  document.getElementById("deliveryDate").value = currentProduct.delivery?.date || "";
-  document.getElementById("deliveryTime").value = currentProduct.delivery?.time || "";
-  document.getElementById("deliveryAddress").value = currentProduct.delivery?.address || "";
+
+  // Clear previous values if it's a new entry (or reload existing if editing?)
+  document.getElementById("deliveryDate").value =
+    currentProduct.delivery?.date || "";
+  document.getElementById("deliveryTime").value =
+    currentProduct.delivery?.time || "";
+  document.getElementById("deliveryAddress").value =
+    currentProduct.delivery?.address || "";
 
   if (!isFirstProduct) {
     sameDeliveryGroup.style.display = "block";
@@ -187,7 +196,8 @@ function toggleSameDelivery() {
   if (isChecked && firstProd && firstProd.delivery) {
     document.getElementById("deliveryDate").value = firstProd.delivery.date;
     document.getElementById("deliveryTime").value = firstProd.delivery.time;
-    document.getElementById("deliveryAddress").value = firstProd.delivery.address;
+    document.getElementById("deliveryAddress").value =
+      firstProd.delivery.address;
     toggleInputState(true);
   } else {
     toggleInputState(false);
@@ -198,7 +208,7 @@ function toggleInputState(disabled) {
   document.getElementById("deliveryDate").disabled = disabled;
   document.getElementById("deliveryTime").disabled = disabled;
   document.getElementById("deliveryAddress").disabled = disabled;
-  
+
   // Visual feedback
   const bg = disabled ? "#f7fafc" : "";
   document.getElementById("deliveryDate").style.backgroundColor = bg;
@@ -219,11 +229,11 @@ function goToPage5() {
   // Save to current product
   const currentProduct =
     orderData.selectedProducts[orderData.selectedProducts.length - 1];
-  
+
   currentProduct.delivery = {
     date: dDate,
     time: dTime,
-    address: dAddr
+    address: dAddr,
   };
 
   // Show additional products
@@ -290,7 +300,7 @@ function toggleReviewMode(key) {
 }
 
 function goToPage6() {
-  reviewMode = {}; 
+  reviewMode = {};
   renderReviewPage();
   showPage(6);
 }
@@ -298,20 +308,22 @@ function goToPage6() {
 function renderReviewPage() {
   const revDiv = document.getElementById("orderReview");
   let html = renderCustomerSection();
-  
+
   orderData.selectedProducts.forEach((prod, pIdx) => {
     html += renderProductBlock(prod, pIdx);
   });
-  
+
   revDiv.innerHTML = html;
 }
 
 function renderCustomerSection() {
-  const isEdit = reviewMode['customer'];
+  const isEdit = reviewMode["customer"];
   let html = `<div class="review-section">
     <div class="review-header">
       <h3>👤 Customer</h3>
-      <button class="edit-btn" onclick="toggleReviewMode('customer')" title="${isEdit ? 'Done' : 'Edit'}">${isEdit ? '❌' : '✏️'}</button>
+      <button class="edit-btn" onclick="toggleReviewMode('customer')" title="${
+        isEdit ? "Done" : "Edit"
+      }">${isEdit ? "❌" : "✏️"}</button>
     </div>`;
 
   if (isEdit) {
@@ -334,36 +346,53 @@ function renderCustomerSection() {
 }
 
 function renderProductBlock(prod, pIdx) {
-  const isEdit = reviewMode[`product-${pIdx}`];
-  
+  // --- SECTION 1: ITEMS ---
+  const isEditItems = reviewMode[`product-${pIdx}-items`];
+
   let html = `<div class="review-section">
     <div class="review-header">
-      <h3 style="text-transform: capitalize;">📦 ${productEmojis[prod.type]} ${formatName(prod.type)}</h3>
-      <button class="edit-btn" onclick="toggleReviewMode('product-${pIdx}')" title="${isEdit ? 'Done' : 'Edit'}">${isEdit ? '❌' : '✏️'}</button>
+      <h3 style="text-transform: capitalize;">${
+        productEmojis[prod.type]
+      } ${formatName(prod.type)}</h3>
+      <button class="edit-btn" onclick="toggleReviewMode('product-${pIdx}-items')" title="${
+    isEditItems ? "Done" : "Edit"
+  }">${isEditItems ? "❌" : "✏️"}</button>
     </div>`;
 
   // ITEMS
-  html += `<h4 style="margin:8px 0; color:#4a5568;">Items</h4>`;
+  // html += `<h4 style="margin:8px 0; color:#4a5568;">Items</h4>`; // Optional: "Items" subheader might be redundant now that it has its own block? keeping it clean.
   prod.sizes.forEach((sz, sIdx) => {
     sz.items.forEach((it, iIdx) => {
-      html += `<div class="review-item" style="${isEdit ? 'background:#fff; border:1px solid #e2e8f0;' : ''}">`;
-      
-      if (prod.type === 'vase') {
-          html += getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
-      } else if (prod.type === 'hand-bouquet') {
-          html += getHandBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
-      } else if (prod.type === 'decoration') {
-          html += getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
+      html += `<div class="review-item" style="${
+        isEditItems ? "background:#fff; border:1px solid #e2e8f0;" : ""
+      }">`;
+
+      if (prod.type === "vase") {
+        html += getVaseReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
+      } else if (prod.type === "hand-bouquet") {
+        html += getHandBouquetReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
+      } else if (prod.type === "decoration") {
+        html += getDecorationReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
       } else {
-          html += getBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
+        html += getBouquetReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
       }
       html += `</div>`;
     });
   });
+  html += `</div>`; // End Items Section
 
-  // DELIVERY
-  html += `<h4 style="margin:16px 0 8px 0; color:#4a5568;">Delivery</h4>`;
-  if (isEdit) {
+  // --- SECTION 2: DELIVERY ---
+  const isEditDelivery = reviewMode[`product-${pIdx}-delivery`];
+
+  html += `<div class="review-section">
+    <div class="review-header">
+      <h3 style="text-transform: capitalize;">📦 Delivery Details</h3>
+      <button class="edit-btn" onclick="toggleReviewMode('product-${pIdx}-delivery')" title="${
+    isEditDelivery ? "Done" : "Edit"
+  }">${isEditDelivery ? "❌" : "✏️"}</button>
+    </div>`;
+
+  if (isEditDelivery) {
     html += `
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Date</label>
@@ -378,13 +407,13 @@ function renderProductBlock(prod, pIdx) {
         <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value)">${prod.delivery.address}</textarea>
       </div>`;
   } else {
-     html += `
+    html += `
       <div class="review-item">Date: ${prod.delivery.date}</div>
       <div class="review-item">Time: ${formatTime(prod.delivery.time)}</div>
       <div class="review-item">Address: ${prod.delivery.address}</div>`;
   }
 
-  html += `</div>`;
+  html += `</div>`; // End Delivery Section
   return html;
 }
 
@@ -417,7 +446,8 @@ function submitOrder() {
   err.innerHTML = "";
 
   // Back End Sheet
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzb_KW-89KZSY3_R4H_VqqOJ3Bh19Sv3aUBzpGaTUIjN7VAYjmI97WZ-DLjgol0YZ83fQ/exec";
+  const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzb_KW-89KZSY3_R4H_VqqOJ3Bh19Sv3aUBzpGaTUIjN7VAYjmI97WZ-DLjgol0YZ83fQ/exec";
 
   // Append data to sheet
   fetch(GOOGLE_SCRIPT_URL, {
@@ -446,20 +476,21 @@ function showPage(num) {
   document
     .querySelectorAll(".page")
     .forEach((p) => p.classList.remove("active"));
-  
+
   // Handle Page 3 variants
   if (num === 3) {
-      const currentProduct = orderData.selectedProducts[orderData.selectedProducts.length - 1];
-      if (currentProduct && currentProduct.type === 'vase') {
-          document.getElementById('page3-vase').classList.add("active");
-      } else {
-          document.getElementById('page3').classList.add("active");
-      }
+    const currentProduct =
+      orderData.selectedProducts[orderData.selectedProducts.length - 1];
+    if (currentProduct && currentProduct.type === "vase") {
+      document.getElementById("page3-vase").classList.add("active");
+    } else {
+      document.getElementById("page3").classList.add("active");
+    }
   } else {
-      const page = document.getElementById(`page${num}`);
-      if (page) page.classList.add("active");
+    const page = document.getElementById(`page${num}`);
+    if (page) page.classList.add("active");
   }
-  
+
   currentPage = num;
   updateProgressBar(num);
   window.scrollTo(0, 0);
@@ -476,24 +507,36 @@ function prepareWhatsApp() {
   orderData.selectedProducts.forEach((prod) => {
     prod.sizes.forEach((sz) => {
       sz.items.forEach((it, idx) => {
-        if (prod.type === 'vase') {
-             const flowersStr = Object.entries(it.mainFlowers || {}).map(([k, v]) => `${k}: ${v}`).join(', ');
-             message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Main Flowers: ${flowersStr} - Color: ${it.color}`;
-        } else if (prod.type === 'hand-bouquet') {
-             message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Status: ${it.status} - Color: ${it.color}`;
-        } else if (prod.type === 'decoration') {
-             const ev = it.eventType === 'Other' ? it.eventDetail : it.eventType;
-              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
+        if (prod.type === "vase") {
+          const flowersStr = Object.entries(it.mainFlowers || {})
+            .map(([k, v]) => `${k}: ${v}`)
+            .join(", ");
+          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
+            sz.size
+          }) - Main Flowers: ${flowersStr} - Color: ${it.color}`;
+        } else if (prod.type === "hand-bouquet") {
+          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
+            sz.size
+          }) - Status: ${it.status} - Color: ${it.color}`;
+        } else if (prod.type === "decoration") {
+          const ev = it.eventType === "Other" ? it.eventDetail : it.eventType;
+          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
+            sz.size
+          }) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
         } else {
-             message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Flower Color: ${it.color} - Wrap: ${it.wrapColor}`;
+          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
+            sz.size
+          }) - Flower Color: ${it.color} - Wrap: ${it.wrapColor}`;
         }
-        
+
         if (it.greeting) message += ` - Greeting: "${it.greeting}"`;
         message += "\n";
       });
     });
     // Add delivery info for this product
-    message += `Delivery: ${prod.delivery.date} at ${formatTime(prod.delivery.time)} to ${prod.delivery.address}\n`;
+    message += `Delivery: ${prod.delivery.date} at ${formatTime(
+      prod.delivery.time
+    )} to ${prod.delivery.address}\n`;
     message += "----------------\n";
   });
 
@@ -503,7 +546,7 @@ function prepareWhatsApp() {
 
   // Open WhatsApp
   const btn = document.getElementById("whatsappBtn");
-  btn.onclick = function() {
-    window.open(whatsappUrl, '_blank');
+  btn.onclick = function () {
+    window.open(whatsappUrl, "_blank");
   };
 }

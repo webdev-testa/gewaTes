@@ -150,14 +150,13 @@ function selectWrap(btn) {
 
 function handleImageUpload(input) {
   const file = input.files[0];
-  const hiddenInput = input.nextElementSibling; // The hidden input field
+  const hiddenInput = input.nextElementSibling; 
 
   if (!file) {
     hiddenInput.value = "";
     return;
   }
 
-  // LIMIT: 2MB (Google Apps Script has limits)
   if (file.size > 2 * 1024 * 1024) {
     alert("File is too large! Please choose an image under 2MB.");
     input.value = ""; 
@@ -167,7 +166,6 @@ function handleImageUpload(input) {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    // This saves the long "data:image/png;base64..." string
     hiddenInput.value = e.target.result;
   };
   reader.readAsDataURL(file);
