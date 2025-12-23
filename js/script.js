@@ -110,6 +110,9 @@ function goToPage3() {
   } else if (currentProduct.type === 'hand-bouquet') {
     renderHandBouquetPage(currentProduct);
     return;
+  } else if (currentProduct.type === 'decoration') {
+    renderDecorationPage(currentProduct);
+    return;
   } else {
     renderBouquetPage(currentProduct);
     return;
@@ -136,6 +139,12 @@ function goToPage4() {
     allValid = validateAndSaveHandBouquetOrder(currentProduct);
     if (!allValid) {
         alert("Please select a Status and Flower Color for every item.");
+        return;
+    }
+  } else if (currentProduct.type === 'decoration') {
+    allValid = validateAndSaveDecorationOrder(currentProduct);
+     if (!allValid) {
+        alert("Please fill in Warna, list of guest, and event info for every item.");
         return;
     }
   } else {
@@ -343,6 +352,8 @@ function renderProductBlock(prod, pIdx) {
           html += getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       } else if (prod.type === 'hand-bouquet') {
           html += getHandBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
+      } else if (prod.type === 'decoration') {
+          html += getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       } else {
           html += getBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       }
@@ -470,6 +481,9 @@ function prepareWhatsApp() {
              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Main Flowers: ${flowersStr} - Color: ${it.color}`;
         } else if (prod.type === 'hand-bouquet') {
              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Status: ${it.status} - Color: ${it.color}`;
+        } else if (prod.type === 'decoration') {
+             const ev = it.eventType === 'Other' ? it.eventDetail : it.eventType;
+              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
         } else {
              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Flower Color: ${it.color} - Wrap: ${it.wrapColor}`;
         }

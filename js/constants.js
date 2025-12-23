@@ -27,3 +27,12 @@ const vaseLimits = {
 };
 
 const buyRentOptions = ["Beli", "Sewa"];
+
+const eventOptions = [
+  "Ulang tahun", 
+  "Bridal Proposal/Party", 
+  "Workshop/Seminar", 
+  "Lamaran", 
+  "Gathering", 
+  "Other"
+];
