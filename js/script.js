@@ -107,6 +107,9 @@ function goToPage3() {
   if (currentProduct.type === 'vase') {
     renderVasePage(currentProduct);
     return;
+  } else if (currentProduct.type === 'hand-bouquet') {
+    renderHandBouquetPage(currentProduct);
+    return;
   } else {
     renderBouquetPage(currentProduct);
     return;
@@ -128,6 +131,12 @@ function goToPage4() {
     if (!allValid) {
       alert("Please select at least one main flower and fill in Dominant Color for every item.");
       return;
+    }
+  } else if (currentProduct.type === 'hand-bouquet') {
+    allValid = validateAndSaveHandBouquetOrder(currentProduct);
+    if (!allValid) {
+        alert("Please select a Status and Flower Color for every item.");
+        return;
     }
   } else {
     // Standard Flow
@@ -332,6 +341,8 @@ function renderProductBlock(prod, pIdx) {
       
       if (prod.type === 'vase') {
           html += getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
+      } else if (prod.type === 'hand-bouquet') {
+          html += getHandBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       } else {
           html += getBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx);
       }
@@ -457,6 +468,8 @@ function prepareWhatsApp() {
         if (prod.type === 'vase') {
              const flowersStr = Object.entries(it.mainFlowers || {}).map(([k, v]) => `${k}: ${v}`).join(', ');
              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Main Flowers: ${flowersStr} - Color: ${it.color}`;
+        } else if (prod.type === 'hand-bouquet') {
+             message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Status: ${it.status} - Color: ${it.color}`;
         } else {
              message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - Flower Color: ${it.color} - Wrap: ${it.wrapColor}`;
         }

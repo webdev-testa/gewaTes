@@ -25,3 +25,5 @@ const vaseLimits = {
   "Grande": { maxTotal: 4, maxPerType: 2, allowHydrangea: true },
   "Gardenia": { maxTotal: 5, maxPerType: 3, allowHydrangea: true }
 };
+
+const buyRentOptions = ["Beli", "Sewa"];
