@@ -12,6 +12,14 @@ function renderBouquetPage(currentProduct) {
         <label>Flower Color *</label>
         <input type="text" id="flower-color-${sizeIdx}-${i}" placeholder="Enter flower color details" />`;
       
+      colorHtml += `
+        <div style="margin-top:8px;">
+          <label style="font-size:14px;">Reference Image (Optional)</label>
+          <input type="file" accept="image/*" id="ref-img-${sizeIdx}-${i}" 
+                style="font-size: 14px;" onchange="handleImageUpload(this)">
+          <input type="hidden" id="ref-img-data-${sizeIdx}-${i}">
+        </div>`;
+      
       if (i > 0) {
         colorHtml += `<div style="margin-top:4px;">
           <input type="checkbox" id="copy-check-${sizeIdx}-${i}" onchange="copyColor(${sizeIdx}, ${i})"> 
@@ -64,8 +72,8 @@ function validateAndSaveBouquetOrder(currentProduct) {
         const greeting = document
           .getElementById(`greeting-${sizeIdx}-${i}`)
           .value.trim();
-
         const flowerColor = colorInput.value.trim();
+        const imgData = document.getElementById(`ref-img-data-${sizeIdx}-${i}`).value;
 
         if (!flowerColor || !selectedWrap) {
           allValid = false;
@@ -74,6 +82,7 @@ function validateAndSaveBouquetOrder(currentProduct) {
             color: flowerColor,
             wrapColor: selectedWrap.textContent,
             greeting: greeting,
+            referenceImage: imgData || ""
           });
         }
       }
@@ -137,4 +146,29 @@ function selectWrap(btn) {
     .querySelectorAll(".color-btn")
     .forEach((b) => b.classList.remove("selected"));
   btn.classList.add("selected");
+}
+
+function handleImageUpload(input) {
+  const file = input.files[0];
+  const hiddenInput = input.nextElementSibling; // The hidden input field
+
+  if (!file) {
+    hiddenInput.value = "";
+    return;
+  }
+
+  // LIMIT: 2MB (Google Apps Script has limits)
+  if (file.size > 2 * 1024 * 1024) {
+    alert("File is too large! Please choose an image under 2MB.");
+    input.value = ""; 
+    hiddenInput.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // This saves the long "data:image/png;base64..." string
+    hiddenInput.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
