@@ -3,6 +3,11 @@
   <head>
     <base target="_top" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gewa Flowers</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -13,15 +18,26 @@
         </div>
         <!-- Page 1: Customer Info & Product Selection -->
         <div class="page active" id="page1">
-          <h1>🌸 Submit Your Flower Order Here</h1>
+          <h1>🌸 Submit Your Flower Order Here 🌸</h1>
           <p class="description">
-            Isi formulir ini setelah konsep warna rangkaian bunga
-            dikonsultasikan dengan admin By Gewa, ya! 🌸✨ Setelah formulir
-            dikirim, kamu mendapatkan 1x kesempatan saja untuk revisi warna.
-            🎨💫 Jadi, pastikan semua data yang kamu submit sudah benar dan
-            lengkap, mulai dari alamat, jumlah pesanan, hingga pilihan warna
-            🏡📦🎀 Jika ada kendala, silakan hubungi admin kembali melalui: 📲
-            WhatsApp di +62858-2222-0904
+            Isi formulir ini <strong>setelah</strong> konsep warna rangkaian
+            bunga dikonsultasikan dengan admin By Gewa, ya! 🌸✨
+          </p>
+          <p class="description">
+            Setelah formulir dikirim, kamu mendapatkan
+            <strong>1x kesempatan</strong> saja untuk revisi warna. 🎨💫
+          </p>
+          <p class="description">
+            Jadi, <strong>pastikan semua data</strong> yang kamu submit
+            <strong>sudah benar dan lengkap</strong>,<br />
+            mulai dari alamat, jumlah pesanan, hingga pilihan warna 🏡📦🎀
+          </p>
+          <p class="description">
+            Jika ada kendala, silakan hubungi admin kembali melalui:<br />
+            📲 WhatsApp di
+            <a href="https://wa.me/6285822220904" target="_blank"
+              >+62858-2222-0904</a
+            >
           </p>
 
           <div class="form-group">
@@ -76,7 +92,12 @@
 
           <div class="size-options" id="sizeOptions"></div>
 
-          <button class="btn btn-primary" onclick="goToPage3()">Next</button>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="goBackFromPage2()">
+              Back
+            </button>
+            <button class="btn btn-primary" onclick="goToPage3()">Next</button>
+          </div>
         </div>
 
         <!-- Page 3: Order Specification -->
@@ -88,7 +109,12 @@
 
           <div id="orderSpecifications"></div>
 
-          <button class="btn btn-primary" onclick="goToPage4()">Next</button>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="showPage(2)">
+              Back
+            </button>
+            <button class="btn btn-primary" onclick="goToPage4()">Next</button>
+          </div>
         </div>
 
         <!-- Page 4: Delivery Details -->
@@ -98,9 +124,19 @@
             When and where should we deliver your order?
           </p>
 
+          <div class="form-group" id="sameDeliveryGroup" style="display: none;">
+            <input type="checkbox" id="sameDelivery" onchange="toggleSameDelivery()" />
+            <label for="sameDelivery" style="display:inline; font-weight:normal;">Same delivery details as first product</label>
+          </div>
+
           <div class="form-group">
             <label>Delivery Date *</label>
             <input type="date" id="deliveryDate" />
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Time *</label>
+            <input type="time" id="deliveryTime" />
           </div>
 
           <div class="form-group">
@@ -112,7 +148,12 @@
             ></textarea>
           </div>
 
-          <button class="btn btn-primary" onclick="goToPage5()">Next</button>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="showPage(3)">
+              Back
+            </button>
+            <button class="btn btn-primary" onclick="goToPage5()">Next</button>
+          </div>
         </div>
 
         <!-- Page 5: Additional Products -->
@@ -124,9 +165,14 @@
 
           <div class="product-grid" id="additionalProducts"></div>
 
-          <button class="btn btn-secondary" onclick="goToPage6()">
-            No Thanks, Review Order
-          </button>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="showPage(4)">
+              Back
+            </button>
+            <button class="btn btn-secondary" onclick="goToPage6()">
+              No Thanks, Review Order
+            </button>
+          </div>
         </div>
 
         <!-- Page 6: Review Order -->
@@ -138,7 +184,11 @@
 
           <div id="orderReview"></div>
 
-          <button class="btn btn-primary" id="btnSubmit" onclick="submitOrder()">
+          <button
+            class="btn btn-primary"
+            id="btnSubmit"
+            onclick="submitOrder()"
+          >
             Confirm Order
           </button>
           <div id="errorMsg"></div>
