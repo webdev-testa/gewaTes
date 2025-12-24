@@ -1,3 +1,71 @@
+function renderDecorationPage2() {
+  const sizeOptionsDiv = document.getElementById("sizeOptions");
+  sizeOptionsDiv.innerHTML = "";
+
+  // Update Header for Page 2 (Optional but good UX)
+  document.querySelector("#page2 h1").innerText = "Event Details";
+  document.querySelector("#page2 .description").innerText =
+    "Tell us about your event.";
+
+  const container = document.createElement("div");
+  container.innerHTML = `
+    <div class="form-group">
+        <label>Berapa orang yang akan hadir di acara kamu?</label>
+        <p style="font-size: 14px; color: #718096; margin-bottom: 8px;">1 pax = 1 orang</p>
+        
+        <div class="size-item" style="border:none; padding:0; margin-bottom:16px;">
+            <div class="size-img" style="width:60px; height:60px; font-size:24px;">${productEmojis["decoration"]}</div>
+        </div>
+
+        <div class="quantity-control" style="justify-content: flex-start;">
+            <button class="qty-btn" onclick="changeDecorationPax(-1)">−</button>
+            <div class="qty-display" id="dec-pax-display">0</div>
+            <button class="qty-btn" onclick="changeDecorationPax(1)">+</button>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 24px;">
+        <label>📃 Sertakan List Nama Orang yang Menghadiri Acara</label>
+        <p style="font-size: 14px; color: #718096; margin-bottom: 8px;">Masukkan juga nama kamu, jika kamu menjadi tuan acara</p>
+        <textarea rows="6" id="dec-guest-list-input" placeholder="List names here..."></textarea>
+    </div>
+  `;
+  sizeOptionsDiv.appendChild(container);
+
+  showPage(2);
+}
+
+function changeDecorationPax(delta) {
+  const display = document.getElementById("dec-pax-display");
+  let val = parseInt(display.textContent) || 0;
+  val = Math.max(0, val + delta);
+  display.textContent = val;
+}
+
+function handleDecorationPage2Next(currentProduct) {
+  const pax = parseInt(
+    document.getElementById("dec-pax-display").textContent
+  ) || 0;
+  const guestList = document.getElementById("dec-guest-list-input").value.trim();
+
+  if (pax <= 0) {
+    alert("Please specify the number of guests (Pax).");
+    return;
+  }
+  if (!guestList) {
+    alert("Please provide the guest list.");
+    return;
+  }
+
+  // Save to temporary storage on the product object
+  currentProduct.decorationData = { pax, guestList };
+
+  // Set a dummy size object so the rest of the flow works (1 item to configure)
+  currentProduct.sizes = [{ size: "Decoration", quantity: 1, items: [] }];
+
+  renderDecorationPage(currentProduct);
+}
+
 function renderDecorationPage(currentProduct) {
   const specDiv = document.getElementById("orderSpecifications");
   specDiv.innerHTML = "";
@@ -29,8 +97,8 @@ function renderDecorationPage(currentProduct) {
             </div>
 
             <div class="form-group">
-                <label>List Nama Tamu *</label>
-                <textarea rows="4" id="dec-guests-${sizeIdx}-${i}" placeholder="List names here..."></textarea>
+                <input type="hidden" id="dec-guests-${sizeIdx}-${i}" value="PREFILLED_FROM_PAGE_2"> 
+                <!-- Hidden input just to keep ID consistency if needed, but we will ignore it in validation -->
             </div>
 
             <div class="form-group">
@@ -75,9 +143,8 @@ function validateAndSaveDecorationOrder(currentProduct) {
       const imgData = document.getElementById(
         `dec-ref-img-data-${sizeIdx}-${i}`
       ).value;
-      const guests = document
-        .getElementById(`dec-guests-${sizeIdx}-${i}`)
-        .value.trim();
+      const guests = currentProduct.decorationData ? currentProduct.decorationData.guestList : "";
+      const pax = currentProduct.decorationData ? currentProduct.decorationData.pax : 0;
       const eventType = document.getElementById(
         `dec-event-${sizeIdx}-${i}`
       ).value;
@@ -97,6 +164,7 @@ function validateAndSaveDecorationOrder(currentProduct) {
           color: color,
           referenceImage: imgData || "",
           guestList: guests,
+          pax: pax,
           eventType: eventType,
           eventDetail: eventType === "Other" ? otherDetail : eventType,
           isDecoration: true,
@@ -131,6 +199,9 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
             }" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
               oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'color', this.value)">
           </div>
+           <div style="margin-top:8px;">
+            <label style="font-size:14px;">Pax: ${it.pax}</label>
+          </div>
           <div style="margin-top:8px;">
             <label style="font-size:14px;">List Nama Tamu</label>
             <textarea rows="4" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
@@ -161,6 +232,9 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
     html += `<strong>(${sz.size})</strong><br>
           Warna: ${it.color}<br>
           Event: ${it.eventType === "Other" ? it.eventDetail : it.eventType}<br>
+          Warna: ${it.color}<br>
+          Event: ${it.eventType === "Other" ? it.eventDetail : it.eventType}<br>
+          Pax: ${it.pax}<br>
           Guests: <pre style="margin:0; font-family:inherit;">${
             it.guestList
           }</pre>`;

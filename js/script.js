@@ -73,6 +73,12 @@ function goToPage2() {
     sizeOptionsDiv.appendChild(sizeDiv);
   });
 
+  // Intercept for Decoration Flow
+  if (productType === "decoration") {
+    renderDecorationPage2(); // Defined in decoration-flow.js
+    return;
+  }
+
   showPage(2);
 }
 
@@ -90,6 +96,7 @@ function goToPage3() {
 
   currentProduct.sizes = [];
 
+
   sizes.forEach((size) => {
     const qtyEl = document.getElementById(`qty-${size}`);
     const qty = parseInt(qtyEl ? qtyEl.textContent : 0) || 0;
@@ -97,6 +104,12 @@ function goToPage3() {
       currentProduct.sizes.push({ size, quantity: qty, items: [] });
     }
   });
+
+  // Intercept for Decoration Flow
+  if (currentProduct.type === "decoration") {
+    handleDecorationPage2Next(currentProduct);
+    return;
+  }
 
   if (currentProduct.sizes.length === 0) {
     alert("Please select at least one item quantity.");
