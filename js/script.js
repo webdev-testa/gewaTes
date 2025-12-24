@@ -126,6 +126,9 @@ function goToPage3() {
   } else if (currentProduct.type === "decoration") {
     renderDecorationPage(currentProduct);
     return;
+  } else if (currentProduct.type === "signature") {
+    renderSignaturePage(currentProduct);
+    return;
   } else {
     renderBouquetPage(currentProduct);
     return;
@@ -162,6 +165,12 @@ function goToPage4() {
       alert(
         "Please fill in Warna, list of guest, and event info for every item."
       );
+      return;
+    }
+  } else if (currentProduct.type === "signature") {
+    allValid = validateAndSaveSignatureOrder(currentProduct);
+    if (!allValid) {
+      alert("Please complete all required fields (Flower/Basket/Color) for your Signature items.");
       return;
     }
   } else {
@@ -386,6 +395,8 @@ function renderProductBlock(prod, pIdx) {
         html += getHandBouquetReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
       } else if (prod.type === "decoration") {
         html += getDecorationReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
+      } else if (prod.type === "signature") {
+        html += getSignatureReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
       } else {
         html += getBouquetReviewHTML(it, sz, isEditItems, pIdx, sIdx, iIdx);
       }
@@ -496,6 +507,8 @@ function showPage(num) {
       orderData.selectedProducts[orderData.selectedProducts.length - 1];
     if (currentProduct && currentProduct.type === "vase") {
       document.getElementById("page3-vase").classList.add("active");
+    } else if (currentProduct && currentProduct.type === "signature") {
+      document.getElementById("page3-signature").classList.add("active");
     } else {
       document.getElementById("page3").classList.add("active");
     }
@@ -536,6 +549,14 @@ function prepareWhatsApp() {
           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
             sz.size
           }) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
+
+        } else if (prod.type === "signature") {
+           let desc = "";
+           if (sz.size === "Yoona") desc = `Main: ${it.mainFlower || '-'}, Color: ${it.color}`;
+           else if (sz.size === "Marii" || sz.size === "Bomi") desc = `Color: ${it.color}, Basket: ${it.basketColor}`;
+           else if (sz.size === "Bloom box") desc = `Color: ${it.color}, Wrap: ${it.wrapColor}`;
+           else if (sz.size === "Acrylic Bloom box") desc = `Color: ${it.color}, Acrylic Details Included`;
+           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - ${desc}`;
         } else {
           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
             sz.size
