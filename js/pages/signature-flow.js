@@ -176,7 +176,7 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
   
   wrapOptions.forEach(opt => {
      const isSelected = item.wrapColor === opt ? "selected" : "";
-     html += `<button class="color-btn ${isSelected}" 
+     html += `<button class="color-btn ${isSelected}" data-wrap-color="${opt}"
           onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
   });
   

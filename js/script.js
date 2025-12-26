@@ -66,7 +66,7 @@ function goToPage2() {
               <div class="size-name">${size}</div>
               <div class="quantity-control">
                 <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-                <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)">
+                <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
                 <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
               </div>
             </div>`;
@@ -269,10 +269,10 @@ function goToPage5() {
   const selectedTypes = orderData.selectedProducts.map((p) => p.type);
   const allProducts = [
     "bouquet",
-    "hand-bouquet",
     "vase",
-    "decoration",
     "signature",
+    "hand-bouquet",
+    "decoration",
   ];
   const available = allProducts.filter((p) => !selectedTypes.includes(p));
 
@@ -290,6 +290,13 @@ function goToPage5() {
       }</div><div>${formatName(prod)}</div>`;
       card.onclick = function () {
         orderData.selectedProducts.push({ type: prod, sizes: [] });
+        
+        // Intercept for Decoration Flow
+        if (prod === "decoration") {
+            renderDecorationPage2();
+            return;
+        }
+
         // Re-trigger page 2 setup manually
         const sizes = productSizes[prod];
         const sizeDiv = document.getElementById("sizeOptions");
@@ -302,7 +309,7 @@ function goToPage5() {
                       <div class="size-name">${size}</div>
                       <div class="quantity-control">
                         <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-                        <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)">
+                        <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
                         <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
                       </div>
                     </div>

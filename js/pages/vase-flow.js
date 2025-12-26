@@ -30,7 +30,7 @@ function renderVasePage(product) {
                 <div class="quantity-control">
                     <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', -1)">−</button>
                     <input type="number" class="qty-input" id="vase-qty-${sizeIdx}-${i}-${flower}" value="0" min="0" 
-                        onchange="manualVaseQtyChange(${sizeIdx}, ${i}, '${flower}', this.value)">
+                        onchange="manualVaseQtyChange(${sizeIdx}, ${i}, '${flower}', this.value)" onfocus="this.select()">
                     <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', 1)">+</button>
                 </div>
             </div>`;
@@ -185,7 +185,7 @@ function validateAndSaveVaseOrder(currentProduct) {
       vaseFlowers.forEach((f) => {
         if (f === "Hydrangea" && !limits.allowHydrangea) return;
         const el = document.getElementById(`vase-qty-${sizeIdx}-${i}-${f}`);
-        const qty = parseInt(el ? el.textContent : 0) || 0;
+        const qty = parseInt(el ? el.value : 0) || 0;
         if (qty > 0) {
           selectedFlowers[f] = qty;
           totalFlowers += qty;

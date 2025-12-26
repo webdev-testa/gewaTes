@@ -32,7 +32,7 @@ function renderBouquetPage(currentProduct) {
       const wrapHtml = wrapOptions
         .map(
           (c) =>
-            `<button class="color-btn" onclick="selectWrap(this)">${c}</button>`
+            `<button class="color-btn" data-wrap-color="${c}" onclick="selectWrap(this)">${c}</button>`
         )
         .join("");
 

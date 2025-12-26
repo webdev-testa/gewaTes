@@ -407,7 +407,6 @@ textarea:focus {
     margin-top: 8px;
 }
 
-
 /* Quantity Input Styles */
 .qty-input {
     width: 60px;
@@ -417,11 +416,12 @@ textarea:focus {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 4px;
-    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .qty-input::-webkit-outer-spin-button,
 .qty-input::-webkit-inner-spin-button {
+  appearance: none;
     -webkit-appearance: none;
     margin: 0;
 }
@@ -429,5 +429,36 @@ textarea:focus {
 .qty-input:focus {
     outline: none;
     border-color: #667eea;
+}
+
+
+/* Special Button Styling for Black and White Options */
+.color-btn[data-wrap-color='Black'] {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+.color-btn[data-wrap-color='Black']:hover {
+    background-color: #333333;
+    border-color: #333333;
+}
+.color-btn[data-wrap-color='Black'].selected {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #000000;
+    border-color: #000000;
+}
+
+.color-btn[data-wrap-color='White'] {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+}
+.color-btn[data-wrap-color='White']:hover {
+    background-color: #f7fafc;
+    border-color: #cbd5e0;
+}
+.color-btn[data-wrap-color='White'].selected {
+    box-shadow: 0 0 0 2px #000000;
+    border-color: #000000;
+    background-color: #ffffff;
 }
 

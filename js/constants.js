@@ -8,10 +8,10 @@ const productSizes = {
 
 const productEmojis = {
   bouquet: "💐",
-  "hand-bouquet": "🌹",
   vase: "🏺",
-  decoration: "🎀",
   signature: "✨",
+  "hand-bouquet": "🌹",
+  decoration: "🎀",
 };
 
 const wrapOptions = ["Black", "White"];

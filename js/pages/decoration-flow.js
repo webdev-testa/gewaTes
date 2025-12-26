@@ -19,7 +19,7 @@ function renderDecorationPage2() {
 
         <div class="quantity-control" style="justify-content: flex-start;">
             <button class="qty-btn" onclick="changeDecorationPax(-1)">−</button>
-            <input type="number" class="qty-input" id="dec-pax-display" value="0" min="0" onchange="manualDecorationPaxChange(this.value)">
+            <input type="number" class="qty-input" id="dec-pax-display" value="0" min="0" onchange="manualDecorationPaxChange(this.value)" onfocus="this.select()">
             <button class="qty-btn" onclick="changeDecorationPax(1)">+</button>
         </div>
     </div>
