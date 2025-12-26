@@ -19,7 +19,7 @@ function renderDecorationPage2() {
 
         <div class="quantity-control" style="justify-content: flex-start;">
             <button class="qty-btn" onclick="changeDecorationPax(-1)">−</button>
-            <div class="qty-display" id="dec-pax-display">0</div>
+            <input type="number" class="qty-input" id="dec-pax-display" value="0" min="0" onchange="manualDecorationPaxChange(this.value)">
             <button class="qty-btn" onclick="changeDecorationPax(1)">+</button>
         </div>
     </div>
@@ -37,14 +37,21 @@ function renderDecorationPage2() {
 
 function changeDecorationPax(delta) {
   const display = document.getElementById("dec-pax-display");
-  let val = parseInt(display.textContent) || 0;
+  let val = parseInt(display.value) || 0;
   val = Math.max(0, val + delta);
-  display.textContent = val;
+  display.value = val;
+}
+
+function manualDecorationPaxChange(val) {
+   const display = document.getElementById("dec-pax-display");
+   let v = parseInt(val) || 0;
+   v = Math.max(0, v);
+   display.value = v;
 }
 
 function handleDecorationPage2Next(currentProduct) {
   const pax = parseInt(
-    document.getElementById("dec-pax-display").textContent
+    document.getElementById("dec-pax-display").value
   ) || 0;
   const guestList = document.getElementById("dec-guest-list-input").value.trim();
 

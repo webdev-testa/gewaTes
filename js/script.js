@@ -66,7 +66,7 @@ function goToPage2() {
               <div class="size-name">${size}</div>
               <div class="quantity-control">
                 <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-                <div class="qty-display" id="qty-${size}">0</div>
+                <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)">
                 <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
               </div>
             </div>`;
@@ -84,9 +84,16 @@ function goToPage2() {
 
 function changeQty(size, delta) {
   const qtyEl = document.getElementById(`qty-${size}`);
-  let qty = parseInt(qtyEl.textContent) || 0;
+  let qty = parseInt(qtyEl.value) || 0;
   qty = Math.max(0, qty + delta);
-  qtyEl.textContent = qty;
+  qtyEl.value = qty;
+}
+
+function manualQtyChange(size, val) {
+  const qtyEl = document.getElementById(`qty-${size}`);
+  let qty = parseInt(val) || 0;
+  qty = Math.max(0, qty); // Ensure not negative
+  qtyEl.value = qty;
 }
 
 function goToPage3() {
@@ -99,7 +106,7 @@ function goToPage3() {
 
   sizes.forEach((size) => {
     const qtyEl = document.getElementById(`qty-${size}`);
-    const qty = parseInt(qtyEl ? qtyEl.textContent : 0) || 0;
+    const qty = parseInt(qtyEl ? qtyEl.value : 0) || 0;
     if (qty > 0) {
       currentProduct.sizes.push({ size, quantity: qty, items: [] });
     }
@@ -295,7 +302,7 @@ function goToPage5() {
                       <div class="size-name">${size}</div>
                       <div class="quantity-control">
                         <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-                        <div class="qty-display" id="qty-${size}">0</div>
+                        <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)">
                         <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
                       </div>
                     </div>

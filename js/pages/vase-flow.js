@@ -29,7 +29,8 @@ function renderVasePage(product) {
                 <div class="size-info"><div class="size-name" style="font-size:16px;">${flower}</div></div>
                 <div class="quantity-control">
                     <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', -1)">−</button>
-                    <div class="qty-display" id="vase-qty-${sizeIdx}-${i}-${flower}">0</div>
+                    <input type="number" class="qty-input" id="vase-qty-${sizeIdx}-${i}-${flower}" value="0" min="0" 
+                        onchange="manualVaseQtyChange(${sizeIdx}, ${i}, '${flower}', this.value)">
                     <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', 1)">+</button>
                 </div>
             </div>`;
@@ -83,7 +84,7 @@ function changeVaseQty(sizeIdx, itemIdx, flower, delta) {
   const currentFlowerEl = document.getElementById(
     `vase-qty-${sizeIdx}-${itemIdx}-${flower}`
   );
-  let currentFlowerVal = parseInt(currentFlowerEl.textContent) || 0;
+  let currentFlowerVal = parseInt(currentFlowerEl.value) || 0;
 
   // Calculate total across all allowed flowers
   vaseFlowers.forEach((f) => {
@@ -91,7 +92,7 @@ function changeVaseQty(sizeIdx, itemIdx, flower, delta) {
 
     const el = document.getElementById(`vase-qty-${sizeIdx}-${itemIdx}-${f}`);
     if (el) {
-      totalCount += parseInt(el.textContent) || 0;
+      totalCount += parseInt(el.value) || 0;
     }
   });
 
@@ -117,7 +118,49 @@ function changeVaseQty(sizeIdx, itemIdx, flower, delta) {
   }
 
   // Update
-  currentFlowerEl.textContent = newVal;
+  currentFlowerEl.value = newVal;
+}
+
+function manualVaseQtyChange(sizeIdx, itemIdx, flower, val) {
+  // Logic similar to changeVaseQty but for absolute set
+  const currentProduct = orderData.selectedProducts[orderData.selectedProducts.length - 1];
+  const sizeObj = currentProduct.sizes[sizeIdx];
+  const limits = vaseLimits[sizeObj.size];
+  const el = document.getElementById(`vase-qty-${sizeIdx}-${itemIdx}-${flower}`);
+
+  let newVal = parseInt(val) || 0;
+  if (newVal < 0) newVal = 0;
+
+  // Check limits
+  if (newVal > limits.maxPerType) {
+    alert(`Max ${limits.maxPerType} of ${flower} allowed for ${sizeObj.size}.`);
+    el.value = 0; // Reset or revert? Reset is safer if we don't track old val. 
+    // Ideally we revert to 0 or previous acceptable. 0 is safe.
+    // Or better: Re-calculate what is max possible? No, just alert and reset to 0 or clamp?
+    // Let's clamp to maxPerType.
+    el.value = limits.maxPerType;
+    newVal = limits.maxPerType;
+  }
+
+  // Check Total Limit
+  let totalCount = 0;
+  vaseFlowers.forEach((f) => {
+    if (f === "Hydrangea" && !limits.allowHydrangea) return;
+    const otherEl = document.getElementById(`vase-qty-${sizeIdx}-${itemIdx}-${f}`);
+    if (otherEl && f !== flower) {
+        totalCount += parseInt(otherEl.value) || 0;
+    }
+  });
+
+  // totalCount is sum of OTHERS.
+  if (totalCount + newVal > limits.maxTotal) {
+      alert(`Total flowers cannot exceed ${limits.maxTotal}.`);
+      // Clamp to remaining
+      const remaining = limits.maxTotal - totalCount;
+      el.value = remaining < 0 ? 0 : remaining;
+  } else {
+      el.value = newVal;
+  }
 }
 
 function validateAndSaveVaseOrder(currentProduct) {
