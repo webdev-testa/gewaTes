@@ -377,7 +377,7 @@ textarea:focus {
 }
 
 .basket-color-btn.selected::after {
-    content: '?';
+    content: "";
     color: #4a5568; 
     position: absolute;
     top: 50%;

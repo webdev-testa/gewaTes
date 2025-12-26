@@ -3,22 +3,25 @@ function renderSignaturePage(product) {
   container.innerHTML = "";
 
   product.sizes.forEach((sizeObj, sIdx) => {
-    // We might have multiple items of the same size, but current structure in script.js seems to group by size
-    // script.js creates `items` array in `sizeObj` with empty objects.
-    // We need to initialize them if they are empty or render them.
-    // Actually goToPage3 initializes `items` based on quantity.
-
     // Group items by size
     const sizeHeader = document.createElement("div");
     sizeHeader.className = "order-item-header";
     sizeHeader.innerHTML = `${productEmojis[product.type]} ${sizeObj.size} (Qty: ${sizeObj.quantity})`;
     container.appendChild(sizeHeader);
 
+    // Initialize items if they don't exist yet (first render)
+    if (sizeObj.items.length === 0) {
+        for (let k = 0; k < sizeObj.quantity; k++) {
+            sizeObj.items.push({});
+        }
+    }
+
     sizeObj.items.forEach((item, iIdx) => {
       const itemDiv = document.createElement("div");
       itemDiv.className = "order-item";
       
       const uniqueId = `sig-${sIdx}-${iIdx}`;
+      itemDiv.id = uniqueId; // Add ID for direct access
       
       let content = `<div><strong>Item #${iIdx + 1}</strong></div>`;
 
@@ -110,6 +113,10 @@ function renderBasketFlowInputs(item, sIdx, iIdx, sizeName) {
     <input type="text" placeholder="e.g. Red and White" 
            value="${item.color || ''}" 
            oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
+    <div style="margin-top: 8px;">
+        <label>Upload Reference Photo (Optional)</label>
+        <input type="file" accept="image/*" class="file-upload-label">
+    </div>
   </div>`;
 
   // Basket Color
@@ -133,7 +140,7 @@ function renderBasketFlowInputs(item, sIdx, iIdx, sizeName) {
                   onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'basketColor', '${c.name}')"></div>`;
   });
   
-  html += `</div><div style="font-size:14px; color:#718096">Selected: ${item.basketColor || 'None'}</div></div>`;
+  html += `</div><div class="basket-selection-text" style="font-size:14px; color:#718096">Selected: ${item.basketColor || 'None'}</div></div>`;
 
   // Greeting Card
   html += `<div class="form-group greeting-card">
@@ -156,6 +163,10 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
     <input type="text" placeholder="e.g. Red and White" 
            value="${item.color || ''}" 
            oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
+    <div style="margin-top: 8px;">
+        <label>Upload Reference Photo (Optional)</label>
+        <input type="file" accept="image/*" class="file-upload-label">
+    </div>
   </div>`;
 
   // Wrap Color (Reuse wrapOptions from constants.js)
@@ -198,7 +209,7 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
 
   // Upload Image
   html += `<div class="form-group">
-    <label>Upload Reference/Logo *</label>
+    <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label">
   </div>`;
 
@@ -206,7 +217,7 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
 
   // Greeting Card Section
   html += `<div class="form-group">
-    <label>Tulisan di Acrylic (Greeting Card Details)</label>
+    <label>Greeting Card Details</label>
     <img src="Form Assets/Signature Contoh Ucapan Akrilik.png" alt="Example" class="acrylic-example-img">
     
     <div style="margin-bottom: 12px;">
@@ -254,18 +265,47 @@ function updateSignatureItem(sIdx, iIdx, field, value) {
   const item = product.sizes[sIdx].items[iIdx];
   item[field] = value;
   
-  // Re-render only if needed, or just update UI classes
-  // For buttons (Choice/Basket/Wrap), we might want to re-render to update 'selected' class
-  // A full re-render is easiest but might lose focus. 
-  // Better to toggle classes manually if performance matters, but here re-render is safer for state consistency 
-  // unless we manage DOM carefully.
-  // Actually, for text inputs, re-render loses focus. So we should NOT re-render on text input.
-  // The 'oninput' handles text without re-render.
-  // The onclick handles buttons. We should manually update classes for buttons.
-  
-  if (['mainFlower', 'basketColor', 'wrapColor'].includes(field)) {
-     renderSignaturePage(product); // Simple but loses text focus if any specific item was focused? No, buttons don't have focus issues usually.
+  // Optimization: Update DOM directly to avoid re-render scroll jumps
+  const uniqueId = `sig-${sIdx}-${iIdx}`;
+  const container = document.getElementById(uniqueId);
+  if (!container) return; // Should not happen
+
+  if (field === 'mainFlower') {
+    const cards = container.querySelectorAll('.flower-choice-card');
+    cards.forEach(card => {
+        // Check if this card matches the selected value (name in text)
+        if (card.textContent.includes(value)) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    });
+
+  } else if (field === 'basketColor') {
+    const btns = container.querySelectorAll('.basket-color-btn');
+    btns.forEach(btn => {
+        if (btn.dataset.color === value) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+    
+    // Update text
+    const txt = container.querySelector('.basket-selection-text');
+    if (txt) txt.textContent = `Selected: ${value}`;
+
+  } else if (field === 'wrapColor') {
+    const btns = container.querySelectorAll('.color-btn');
+    btns.forEach(btn => {
+        if (btn.textContent.trim() === value) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
   }
+  // For text inputs 'color', 'greeting', etc., no DOM update needed as they are standard inputs value preserved.
 }
 
 function updateAcrylicField(sIdx, iIdx, field, value) {
@@ -292,12 +332,6 @@ function validateAndSaveSignatureOrder(product) {
         if (!item.wrapColor || !item.color) isValid = false;
       } else if (sName === "Acrylic Bloom box") {
          if (!item.color) isValid = false;
-         // Check acrylic fields? Optional? 
-         // "Input will be accepting like the uploaded image"
-         // Usually fields are required if not stated otherwise.
-         // Let's assume header, receiver, sender are basic requirements? Or just let them fill what they want.
-         // Prompt says: "But for the Acrylic Bloom box. it will asks color upload gambar"
-         // I'll enforce color.
       }
     });
   });
