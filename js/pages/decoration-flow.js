@@ -206,8 +206,11 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
             }" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
               oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'color', this.value)">
           </div>
-           <div style="margin-top:8px;">
-            <label style="font-size:14px;">Pax: ${it.pax}</label>
+            <label style="font-size:14px;">Pax</label>
+            <input type="number" value="${it.pax}" 
+                   style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
+                   oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'pax', this.value)"
+                   onfocus="this.select()">
           </div>
           <div style="margin-top:8px;">
             <label style="font-size:14px;">List Nama Tamu</label>
@@ -237,8 +240,6 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
           `;
   } else {
     html += `<strong>(${sz.size})</strong><br>
-          Warna: ${it.color}<br>
-          Event: ${it.eventType === "Other" ? it.eventDetail : it.eventType}<br>
           Warna: ${it.color}<br>
           Event: ${it.eventType === "Other" ? it.eventDetail : it.eventType}<br>
           Pax: ${it.pax}<br>
