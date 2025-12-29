@@ -9,6 +9,7 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>"
     />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   </head>
   <body>
     <div class="container">
@@ -58,23 +59,33 @@
             <label>Select Product Type *</label>
             <div class="product-grid" id="productGrid">
               <div class="product-card" data-product="bouquet">
-                <div class="product-img">💐</div>
+                <div class="product-img">
+                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Bouquet By Gewa.png" alt="Bouquet">
+                </div>
                 <div>Bouquet</div>
               </div>
               <div class="product-card" data-product="vase">
-                <div class="product-img">🏺</div>
+                <div class="product-img">
+                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Vase by gewa.png" alt="Vase">
+                </div>
                 <div>Vase</div>
               </div>
               <div class="product-card" data-product="signature">
-                <div class="product-img">✨</div>
+                <div class="product-img">
+                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Signature By Gewa.png" alt="Signature">
+                </div>
                 <div>Signature</div>
               </div>
               <div class="product-card" data-product="hand-bouquet">
-                <div class="product-img">🌹</div>
+                <div class="product-img">
+                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Hand Bouquet By Gewa Cover.png" alt="Hand Bouquet">
+                </div>
                 <div>Hand Bouquet</div>
               </div>
               <div class="product-card" data-product="decoration">
-                <div class="product-img">🎀</div>
+                <div class="product-img">
+                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Decoration By Gewa.png" alt="Decoration">
+                </div>
                 <div>Decoration</div>
               </div>
             </div>
@@ -165,7 +176,7 @@
 
           <div class="form-group">
             <label>Delivery Date *</label>
-            <input type="date" id="deliveryDate" />
+            <input type="text" id="deliveryDate" placeholder="Select Date..." />
           </div>
 
           <div class="form-group">
@@ -173,13 +184,24 @@
             <input type="time" id="deliveryTime" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="std-address-group">
             <label>Delivery Address *</label>
             <textarea
               id="deliveryAddress"
               rows="3"
               placeholder="Enter full delivery address"
             ></textarea>
+          </div>
+
+          <!-- Decoration Specific Delivery Fields -->
+          <div id="decorationDeliveryFields" style="display: none;">
+            <div class="form-group">
+                <label>📍 Alamat Venue *</label>
+                <input type="text" id="decVenueName" placeholder="Nama Venue, contoh: Nomu Cafe" style="margin-bottom:8px;" />
+                <input type="text" id="decVenueAddress" placeholder="Alamat Venue" style="margin-bottom:8px;" />
+                <input type="text" id="decVenueFloor" placeholder="Lantai" style="margin-bottom:8px;" />
+                <input type="text" id="decVenueRoom" placeholder="Ruangan" />
+            </div>
           </div>
 
           <div class="btn-group">
@@ -251,5 +273,6 @@
     <script src="js/pages/decoration-flow.js"></script>
     <script src="js/pages/signature-flow.js"></script>
     <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   </body>
 </html>

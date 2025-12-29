@@ -55,23 +55,7 @@ function goToPage2() {
 
   // Generate size options
   const sizeOptionsDiv = document.getElementById("sizeOptions");
-  sizeOptionsDiv.innerHTML = "";
-
-  productSizes[productType].forEach((size) => {
-    const sizeDiv = document.createElement("div");
-    sizeDiv.className = "size-item";
-    sizeDiv.innerHTML = `
-            <div class="size-img">${productEmojis[productType]}</div>
-            <div class="size-info">
-              <div class="size-name">${size}</div>
-              <div class="quantity-control">
-                <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-                <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
-                <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
-              </div>
-            </div>`;
-    sizeOptionsDiv.appendChild(sizeDiv);
-  });
+  renderSizeOptionsHTML(sizeOptionsDiv, productType);
 
   // Intercept for Decoration Flow
   if (productType === "decoration") {
@@ -192,6 +176,24 @@ function goToPage4() {
   }
 
   // Setup Page 4 (Delivery)
+
+  // Initialize Flatpickr
+  const dateInput = document.getElementById("deliveryDate");
+  // Destroy previous instance if exists to prevent duplicates
+  if (dateInput._flatpickr) {
+    dateInput._flatpickr.destroy();
+  }
+
+  const today = new Date();
+  const minDate = new Date(today);
+  minDate.setDate(today.getDate() + 3);
+
+  flatpickr("#deliveryDate", {
+    minDate: minDate,
+    dateFormat: "Y-m-d", 
+    disableMobile: "true" 
+  });
+
   // Check if this is the 2nd+ product
   const isFirstProduct = orderData.selectedProducts.length === 1;
   const sameDeliveryGroup = document.getElementById("sameDeliveryGroup");
@@ -202,8 +204,41 @@ function goToPage4() {
     currentProduct.delivery?.date || "";
   document.getElementById("deliveryTime").value =
     currentProduct.delivery?.time || "";
-  document.getElementById("deliveryAddress").value =
-    currentProduct.delivery?.address || "";
+  
+  // Handle Address Fields
+  const stdAddrGroup = document.getElementById("std-address-group");
+  const decAddrGroup = document.getElementById("decorationDeliveryFields");
+  
+  if (currentProduct.type === "decoration") {
+      stdAddrGroup.style.display = "none";
+      decAddrGroup.style.display = "block";
+      
+      // Try to parse existing address if it exists
+      let venue="", vAddr="", vFloor="", vRoom="";
+      try {
+          if (currentProduct.delivery?.address) {
+              const parsed = JSON.parse(currentProduct.delivery.address);
+              venue = parsed.venue || "";
+              vAddr = parsed.address || "";
+              vFloor = parsed.floor || "";
+              vRoom = parsed.room || "";
+          }
+      } catch (e) {
+          // Fallback if not JSON (legacy or error)
+          venue = currentProduct.delivery?.address || "";
+      }
+      
+      document.getElementById("decVenueName").value = venue;
+      document.getElementById("decVenueAddress").value = vAddr;
+      document.getElementById("decVenueFloor").value = vFloor;
+      document.getElementById("decVenueRoom").value = vRoom;
+      
+  } else {
+      stdAddrGroup.style.display = "block";
+      decAddrGroup.style.display = "none";
+      document.getElementById("deliveryAddress").value =
+        currentProduct.delivery?.address || "";
+  }
 
   if (!isFirstProduct) {
     sameDeliveryGroup.style.display = "block";
@@ -247,11 +282,59 @@ function toggleInputState(disabled) {
 
 function goToPage5() {
   const dDate = document.getElementById("deliveryDate").value;
-  const dTime = document.getElementById("deliveryTime").value;
-  const dAddr = document.getElementById("deliveryAddress").value.trim();
 
-  if (!dDate || !dTime || !dAddr) {
-    alert("Please fill in Delivery Date, Time, and Address.");
+  // Validate Date Restriction (Today + 3)
+  if (dDate) {
+    const today = new Date();
+    today.setDate(today.getDate() + 3);
+    // Reset time part for accurate comparison
+    today.setHours(0,0,0,0);
+    
+    // Parse selected string to date
+    const selected = new Date(dDate);
+    selected.setHours(0,0,0,0);
+
+    if (selected < today) {
+       alert("Order date must be at least 3 days from today. Please select a valid date.");
+       return;
+    }
+  }
+
+  const dTime = document.getElementById("deliveryTime").value;
+  
+  // Address Handling
+  let dAddr = "";
+  const currentProd =
+    orderData.selectedProducts[orderData.selectedProducts.length - 1];
+
+  if (currentProd.type === "decoration") {
+      const vName = document.getElementById("decVenueName").value.trim();
+      const vAddr = document.getElementById("decVenueAddress").value.trim();
+      const vFloor = document.getElementById("decVenueFloor").value.trim();
+      const vRoom = document.getElementById("decVenueRoom").value.trim();
+      
+      if (!vName || !vAddr) { // Floor and Room strictly required? Maybe just warnings or assume required based on 'Alamat Venue *' label implies structure
+           alert("Please fill in Venue Name and Address.");
+           return;
+      }
+      
+      // Store as JSON
+      dAddr = JSON.stringify({
+          venue: vName,
+          address: vAddr,
+          floor: vFloor,
+          room: vRoom
+      });
+  } else {
+      dAddr = document.getElementById("deliveryAddress").value.trim();
+      if (!dAddr) {
+        alert("Please fill in Delivery Address.");
+        return;
+      }
+  }
+
+  if (!dDate || !dTime) {
+    alert("Please fill in Delivery Date and Time.");
     return;
   }
 
@@ -285,9 +368,7 @@ function goToPage5() {
     available.forEach((prod) => {
       const card = document.createElement("div");
       card.className = "product-card";
-      card.innerHTML = `<div class="product-img">${
-        productEmojis[prod]
-      }</div><div>${formatName(prod)}</div>`;
+      card.innerHTML = `<div class="product-img"><img src="${productImages[prod]}" alt="${prod}"></div><div>${formatName(prod)}</div>`;
       card.onclick = function () {
         orderData.selectedProducts.push({ type: prod, sizes: [] });
         
@@ -298,29 +379,36 @@ function goToPage5() {
         }
 
         // Re-trigger page 2 setup manually
-        const sizes = productSizes[prod];
         const sizeDiv = document.getElementById("sizeOptions");
-        sizeDiv.innerHTML = "";
-        sizes.forEach((size) => {
-          sizeDiv.innerHTML += `
-                  <div class="size-item">
-                    <div class="size-img">${productEmojis[prod]}</div>
-                    <div class="size-info">
-                      <div class="size-name">${size}</div>
-                      <div class="quantity-control">
-                        <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-                        <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
-                        <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
-                      </div>
-                    </div>
-                  </div>`;
-        });
+        renderSizeOptionsHTML(sizeDiv, prod);
         showPage(2);
       };
       addDiv.appendChild(card);
     });
   }
   showPage(5);
+}
+
+function renderSizeOptionsHTML(container, type) {
+    container.innerHTML = "";
+    const sizes = productSizes[type];
+    
+    sizes.forEach((size) => {
+        const imgSrc = getSizeImage(type, size);
+        const sizeDiv = document.createElement("div");
+        sizeDiv.className = "size-item";
+        sizeDiv.innerHTML = `
+          <div class="size-img"><img src="${imgSrc}" alt="${size}"></div>
+          <div class="size-info">
+            <div class="size-name">${size}</div>
+            <div class="quantity-control">
+              <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
+              <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
+              <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
+            </div>
+          </div>`;
+        container.appendChild(sizeDiv);
+    });
 }
 
 function formatName(str) {
@@ -350,6 +438,26 @@ function renderReviewPage() {
   });
 
   revDiv.innerHTML = html;
+  initReviewFlatpickr();
+}
+
+function initReviewFlatpickr() {
+  const inputs = document.querySelectorAll(".flatpickr-review-date");
+  if (inputs.length === 0) return;
+
+  const today = new Date();
+  const minDate = new Date(today);
+  minDate.setDate(today.getDate() + 3);
+
+  flatpickr(inputs, {
+    minDate: minDate,
+    dateFormat: "Y-m-d", 
+    disableMobile: "true",
+    onChange: function(selectedDates, dateStr, instance) {
+       const pIdx = instance.element.dataset.pidx;
+       updateProductDelivery(pIdx, 'date', dateStr);
+    }
+  });
 }
 
 function renderCustomerSection() {
@@ -434,21 +542,46 @@ function renderProductBlock(prod, pIdx) {
     html += `
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Date</label>
-        <input type="date" value="${prod.delivery.date}" onchange="updateProductDelivery(${pIdx}, 'date', this.value)">
+        <input type="text" class="flatpickr-review-date" data-pidx="${pIdx}" value="${prod.delivery.date}">
       </div>
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Time</label>
         <input type="time" value="${prod.delivery.time}" step="60" onchange="updateProductDelivery(${pIdx}, 'time', this.value)">
-      </div>
-      <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
-        <label>Address</label>
-        <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value)">${prod.delivery.address}</textarea>
       </div>`;
+      
+      if (prod.type === "decoration") {
+          let addrObj = {venue:"", address:"", floor:"", room:""};
+          try { addrObj = JSON.parse(prod.delivery.address); } catch(e){}
+          
+          html += `
+           <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
+            <label>📍 Alamat Venue</label>
+            <input type="text" placeholder="Nama Venue" value="${addrObj.venue}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'venue', this.value)">
+            <input type="text" placeholder="Alamat" value="${addrObj.address}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'address', this.value)">
+            <input type="text" placeholder="Lantai" value="${addrObj.floor}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'floor', this.value)">
+            <input type="text" placeholder="Ruangan" value="${addrObj.room}" style="width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'room', this.value)">
+           </div>`;
+      } else {
+         html += `
+          <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
+            <label>Address</label>
+            <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value)">${prod.delivery.address}</textarea>
+          </div>`;
+      }
+      
   } else {
+    let displayAddr = prod.delivery.address;
+    if (prod.type === "decoration") {
+        try {
+            const parsed = JSON.parse(displayAddr);
+            displayAddr = `<strong>${parsed.venue}</strong><br>${parsed.address}<br>Lantai: ${parsed.floor}, Ruangan: ${parsed.room}`;
+        } catch(e) {}
+    }
+  
     html += `
       <div class="review-item">Date: ${prod.delivery.date}</div>
       <div class="review-item">Time: ${formatTime(prod.delivery.time)}</div>
-      <div class="review-item">Address: ${prod.delivery.address}</div>`;
+      <div class="review-item">Address: ${displayAddr}</div>`;
   }
 
   html += `</div>`; // End Delivery Section
@@ -457,6 +590,17 @@ function renderProductBlock(prod, pIdx) {
 
 function updateProductDelivery(pIdx, field, value) {
   orderData.selectedProducts[pIdx].delivery[field] = value;
+}
+
+function updateDecorationDelivery(pIdx, subField, value) {
+    const prod = orderData.selectedProducts[pIdx];
+    let addrObj = {venue:"", address:"", floor:"", room:""};
+    try {
+        addrObj = JSON.parse(prod.delivery.address);
+    } catch (e) {}
+    
+    addrObj[subField] = value;
+    prod.delivery.address = JSON.stringify(addrObj);
 }
 
 function formatTime(timeStr) {

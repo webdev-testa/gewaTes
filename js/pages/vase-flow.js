@@ -217,8 +217,25 @@ function getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
     html += `
             <strong>(${sz.size})</strong>
             <div style="margin-top:8px;">
-              <label style="font-size:14px;">Main Flowers (Read Only)</label>
-              <div style="padding:8px; background:#f7fafc; border-radius:4px;">${flowersStr}</div>
+              <label style="font-size:14px;">Main Flowers</label>
+              <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+              ${vaseFlowers.map(f => {
+                   const limits = vaseLimits[sz.size];
+                   if (f === "Hydrangea" && !limits.allowHydrangea) return '';
+                   
+                   const currentQty = it.mainFlowers[f] || 0;
+                   return `
+                    <div class="size-item" style="padding: 4px; border:1px solid #e2e8f0;">
+                        <div class="size-info"><div class="size-name" style="font-size:14px;">${f}</div></div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" style="width:28px; height:28px; font-size:16px;" onclick="updateVaseReviewQty(${pIdx}, ${sIdx}, ${iIdx}, '${f}', -1)">−</button>
+                            <input type="number" class="qty-input" style="width:40px; font-size:16px;" value="${currentQty}" min="0" 
+                                onchange="manualVaseReviewQty(${pIdx}, ${sIdx}, ${iIdx}, '${f}', this.value)" onfocus="this.select()">
+                            <button class="qty-btn" style="width:28px; height:28px; font-size:16px;" onclick="updateVaseReviewQty(${pIdx}, ${sIdx}, ${iIdx}, '${f}', 1)">+</button>
+                        </div>
+                    </div>`;
+              }).join('')}
+              </div>
             </div>
             <div style="margin-top:8px;">
               <label style="font-size:14px;">Dominant Color</label>
@@ -258,9 +275,79 @@ function handleImageUpload(input) {
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    hiddenInput.value = e.target.result;
-  };
   reader.readAsDataURL(file);
+}
+
+function updateVaseReviewQty(pIdx, sIdx, iIdx, flower, delta) {
+  const product = orderData.selectedProducts[pIdx];
+  const sizeObj = product.sizes[sIdx];
+  const item = sizeObj.items[iIdx];
+  const limits = vaseLimits[sizeObj.size];
+
+  // Current state
+  const currentQty = item.mainFlowers[flower] || 0;
+  
+  // Calculate total across all flowers for this item
+  let totalCount = 0;
+  vaseFlowers.forEach(f => {
+      if (item.mainFlowers[f]) totalCount += item.mainFlowers[f];
+  });
+
+  const newVal = currentQty + delta;
+  
+  if (newVal < 0) return;
+
+  if (delta > 0) {
+      if (totalCount >= limits.maxTotal) {
+           alert(`Max total ${limits.maxTotal} flowers allowed.`);
+           return;
+      }
+      if (newVal > limits.maxPerType) {
+          alert(`Max ${limits.maxPerType} of ${flower} allowed.`);
+          return;
+      }
+  }
+
+  // Update Data
+  item.mainFlowers[flower] = newVal;
+  if (newVal === 0) delete item.mainFlowers[flower];
+
+  // Re-render
+  renderReviewPage();
+}
+
+function manualVaseReviewQty(pIdx, sIdx, iIdx, flower, val) {
+  const product = orderData.selectedProducts[pIdx];
+  const sizeObj = product.sizes[sIdx];
+  const item = sizeObj.items[iIdx];
+  const limits = vaseLimits[sizeObj.size];
+
+  let newVal = parseInt(val) || 0;
+  if (newVal < 0) newVal = 0;
+
+  // Check max per type
+  if (newVal > limits.maxPerType) {
+      alert(`Max ${limits.maxPerType} of ${flower} allowed.`);
+      newVal = limits.maxPerType;
+  }
+
+  // Check total
+  let otherTotal = 0;
+  vaseFlowers.forEach(f => {
+      if (f !== flower && item.mainFlowers[f]) {
+          otherTotal += item.mainFlowers[f];
+      }
+  });
+
+  if (otherTotal + newVal > limits.maxTotal) {
+      alert(`Total flowers cannot exceed ${limits.maxTotal}.`);
+      let remaining = limits.maxTotal - otherTotal;
+      newVal = remaining < 0 ? 0 : remaining;
+  }
+
+  // Update
+  item.mainFlowers[flower] = newVal;
+  if (newVal === 0) delete item.mainFlowers[flower];
+
+  renderReviewPage();
 }
