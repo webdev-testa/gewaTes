@@ -33,8 +33,8 @@ function renderVasePage(product) {
         // Using flower-choice-card style from styles.css (same as Yoona)
         // Adding cursor:default because here we use quantity buttons, not whole-card selection
         itemDiv.innerHTML += `
-            <div class="flower-choice-card" style="padding: 12px; cursor: default; display:flex; flex-direction:column; justify-content:space-between;">
-                <img src="${imgPath}" alt="${flower}" class="flower-choice-img" style="width: 100%; height: auto; object-fit: contain;">
+            <div class="flower-choice-card" style="padding: 12px; cursor: default; display:flex; flex-direction:column; justify-content:space-between; border: none;">
+                <img src="${imgPath}" alt="${flower}" class="flower-choice-img" style="width: 100%; height: auto; object-fit: contain; padding: 5px;">
                 
                 <div class="quantity-control" style="justify-content:center; margin-top:auto;">
                     <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', -1)">−</button>
