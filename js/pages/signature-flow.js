@@ -410,16 +410,6 @@ function renderBasketReviewInputs(item, pIdx, sIdx, iIdx) {
   html += `<div class="form-group"><label>Basket Color</label><div class="basket-colors-grid">`;
   basketColors.forEach(c => {
     const isSelected = item.basketColor === c.name ? "selected" : "";
-    // Re-using basket-color-btn class for styling, assuming it relies on data-color or specific class names? 
-    // In signature-flow.js renderBasketFlowInputs, it uses data-color for styling (bg color). The map had hex values.
-    // I need the HEX values or the css class to show colors.
-    // Let's hardcode or lookup. The original code used inline style or class based on name?
-    // Looking at renderBasketFlowInputs, it generates: <div class="basket-color-btn..." data-color="${c.name}">
-    // Style.css probably handles the background-color based on data-color OR the js function didn't set style?
-    // Wait, in Step 198 line 135, it iterates objects with hex. 
-    // I need those hexes here to replicate the look if it's inline, or relies on css.
-    // Checking previous file view: line 123 defined the array with hex.
-    // I should provide the style manually here.
     const hexMap = { "Lilac": "#f3cbff", "Pink": "#fad9db", "Buttercup": "#feffcb", "Mint": "#d9ffd6", "Black": "#0d0d0d" };
     html += `<div class="basket-color-btn ${isSelected}" style="background-color:${hexMap[c.name]}" data-color="${c.name}" onclick="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'basketColor', '${c.name}')"></div>`;
   });
@@ -483,4 +473,3 @@ function updateSignatureReviewAcrylic(pIdx, sIdx, iIdx, field, value) {
     if (!item.acrylic) item.acrylic = {};
     item.acrylic[field] = value;
 }
-
