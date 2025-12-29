@@ -473,3 +473,35 @@ textarea:focus {
     background-color: #ffffff;
 }
 
+/* Mobile Responsive Adjustments */
+@media (max-width: 480px) {
+  .card {
+    padding: 16px;
+  }
+  
+  .size-options {
+    gap: 10px;
+  }
+  
+  .size-item {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .quantity-control {
+    gap: 6px;
+  }
+  
+  .qty-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+  
+  .qty-input {
+    width: 40px;
+    font-size: 16px;
+    padding: 2px;
+  }
+}
+
