@@ -61,7 +61,7 @@ textarea:focus {
   margin-top: 20px;
 }
 .product-card {
-  border: 3px solid #e2e8f0;
+  border: none;
   border-radius: 12px;
   padding: 16px;
   cursor: pointer;
@@ -69,12 +69,12 @@ textarea:focus {
   text-align: center;
 }
 .product-card:hover {
-  border-color: #667eea;
+  /* border-color: #667eea; Removed for borderless look */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 .product-card.selected {
-  border-color: #667eea;
+  /* border-color: #667eea; Removed */
   background: #eef2ff;
 }
 .product-img {
@@ -93,6 +93,11 @@ textarea:focus {
   width: 100%;
   height: auto;
 }
+
+#productGrid .product-img {
+  margin-bottom: 0;
+}
+
 .size-options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

@@ -22,10 +22,6 @@ function renderVasePage(product) {
       // Flower Selection
       itemDiv.innerHTML += `<label>Main Flower Selection *</label>`;
       
-
-      
-      // Grid Container - Using standard size-options grid
-      // Build string first to avoid partial HTML parsing issues with innerHTML +=
       let gridHTML = `<div class="size-options">`;
 
       vaseFlowers.forEach((flower) => {
