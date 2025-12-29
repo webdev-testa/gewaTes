@@ -94,22 +94,22 @@ textarea:focus {
   height: auto;
 }
 .size-options {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-top: 20px;
 }
 .size-item {
   border: 2px solid #e2e8f0;
   border-radius: 12px;
-  padding: 16px;
+  padding: 10px;
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 10px;
 }
 .size-img {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: auto;
   background: #f7fafc;
   border-radius: 8px;
   display: flex;
@@ -117,6 +117,7 @@ textarea:focus {
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
+  aspect-ratio: 1 / 1;
 }
 
 .size-img img {
@@ -124,18 +125,12 @@ textarea:focus {
   height: 100%;
   object-fit: cover;
 }
-.size-info {
-  flex: 1;
-}
-.size-name {
-  font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 4px;
-}
 .quantity-control {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
+  margin-top: auto;
 }
 .qty-btn {
   width: 36px;

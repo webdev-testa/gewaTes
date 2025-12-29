@@ -399,13 +399,10 @@ function renderSizeOptionsHTML(container, type) {
         sizeDiv.className = "size-item";
         sizeDiv.innerHTML = `
           <div class="size-img"><img src="${imgSrc}" alt="${size}"></div>
-          <div class="size-info">
-            <div class="size-name">${size}</div>
-            <div class="quantity-control">
-              <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
-              <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
-              <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
-            </div>
+          <div class="quantity-control">
+            <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
+            <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
+            <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
           </div>`;
         container.appendChild(sizeDiv);
     });
