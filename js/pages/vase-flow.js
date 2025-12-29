@@ -22,8 +22,11 @@ function renderVasePage(product) {
       // Flower Selection
       itemDiv.innerHTML += `<label>Main Flower Selection *</label>`;
       
+
+      
       // Grid Container - Using standard size-options grid
-      itemDiv.innerHTML += `<div class="size-options">`;
+      // Build string first to avoid partial HTML parsing issues with innerHTML +=
+      let gridHTML = `<div class="size-options">`;
 
       vaseFlowers.forEach((flower) => {
         if (flower === "Hydrangea" && !limits.allowHydrangea) return;
@@ -31,7 +34,7 @@ function renderVasePage(product) {
         const imgPath = `Form Assets/Main Flower Assets/Vase ${flower}.png`;
 
         // Using standard size-item structure (like Page 2)
-        itemDiv.innerHTML += `
+        gridHTML += `
             <div class="size-item">
                 <div class="size-img">
                     <img src="${imgPath}" alt="${flower}">
@@ -46,7 +49,8 @@ function renderVasePage(product) {
             </div>`;
       });
 
-      itemDiv.innerHTML += `</div>`; // Close grid
+      gridHTML += `</div>`; // Close grid
+      itemDiv.innerHTML += gridHTML;
 
       // Color
       itemDiv.innerHTML += `
