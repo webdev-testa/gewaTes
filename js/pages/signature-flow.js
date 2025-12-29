@@ -91,6 +91,9 @@ function renderYoonaInputs(item, sIdx, iIdx) {
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label">
+    <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
+        Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+    </div>
   </div>`;
 
   // Greeting Card (Vase style)
@@ -116,6 +119,9 @@ function renderBasketFlowInputs(item, sIdx, iIdx, sizeName) {
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
         <input type="file" accept="image/*" class="file-upload-label">
+        <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
+            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+        </div>
     </div>
   </div>`;
 
@@ -166,6 +172,9 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
         <input type="file" accept="image/*" class="file-upload-label">
+        <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
+            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+        </div>
     </div>
   </div>`;
 
@@ -211,6 +220,9 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label">
+    <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
+        Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+    </div>
   </div>`;
 
   html += `<hr style="margin: 24px 0; border: 0; border-top: 1px solid #e2e8f0;">`;
@@ -251,6 +263,9 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
      <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Unggah Logo (Jika Ada)</label>
       <input type="file" accept="image/*">
+       <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
+          Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+       </div>
     </div>
 
   </div>`;
@@ -273,7 +288,6 @@ function updateSignatureItem(sIdx, iIdx, field, value) {
   if (field === 'mainFlower') {
     const cards = container.querySelectorAll('.flower-choice-card');
     cards.forEach(card => {
-        // Check if this card matches the selected value (name in text)
         if (card.textContent.includes(value)) {
             card.classList.add('selected');
         } else {
