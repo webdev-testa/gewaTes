@@ -96,16 +96,16 @@ textarea:focus {
 .size-options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 8px; /* Reduced from 16px */
   margin-top: 20px;
 }
 .size-item {
-  border: 2px solid #e2e8f0;
+  /* Removed border */
   border-radius: 12px;
-  padding: 10px;
+  padding: 0; /* Removed padding */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 .size-img {
   width: 100%;
@@ -480,12 +480,12 @@ textarea:focus {
   }
   
   .size-options {
-    gap: 10px;
+    gap: 4px; /* Minimal gap */
   }
   
   .size-item {
-    padding: 8px;
-    gap: 8px;
+    padding: 0;
+    gap: 4px;
   }
   
   .quantity-control {

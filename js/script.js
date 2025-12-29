@@ -24,6 +24,11 @@ function goBackFromPage2() {
   }
 }
 function goToPage2() {
+  // Reset Header to default (in case Decoration flow changed it)
+  document.querySelector("#page2 h1").innerText = "Select Sizes";
+  document.querySelector("#page2 .description").innerText =
+    "Choose the sizes and quantities you'd like to order.";
+
   const name = document.getElementById("customerName").value.trim();
   const instagram = document.getElementById("instagram").value.trim();
   const selectedCard = document.querySelector(
@@ -55,6 +60,9 @@ function goToPage2() {
 
   // Generate size options
   const sizeOptionsDiv = document.getElementById("sizeOptions");
+  // Reset class to default grid
+  sizeOptionsDiv.className = "size-options";
+  
   renderSizeOptionsHTML(sizeOptionsDiv, productType);
 
   // Intercept for Decoration Flow

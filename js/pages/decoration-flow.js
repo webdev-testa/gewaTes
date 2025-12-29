@@ -1,6 +1,8 @@
 function renderDecorationPage2() {
   const sizeOptionsDiv = document.getElementById("sizeOptions");
   sizeOptionsDiv.innerHTML = "";
+  sizeOptionsDiv.className = ""; // Remove grid class so it spans full width
+
 
   // Update Header for Page 2 (Optional but good UX)
   document.querySelector("#page2 h1").innerText = "Event Details";
