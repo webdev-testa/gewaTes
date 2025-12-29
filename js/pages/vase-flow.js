@@ -22,19 +22,20 @@ function renderVasePage(product) {
       // Flower Selection
       itemDiv.innerHTML += `<label>Main Flower Selection *</label>`;
       
-      // Grid Container - Using Grid instead of Flex to handle multiple rows nicely
-      itemDiv.innerHTML += `<div class="vase-flower-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; margin-bottom:20px;">`;
+      // Grid Container - Using standard size-options grid
+      itemDiv.innerHTML += `<div class="size-options">`;
 
       vaseFlowers.forEach((flower) => {
         if (flower === "Hydrangea" && !limits.allowHydrangea) return;
 
         const imgPath = `Form Assets/Main Flower Assets/Vase ${flower}.png`;
 
-        // Using flower-choice-card style from styles.css (same as Yoona)
-        // Adding cursor:default because here we use quantity buttons, not whole-card selection
+        // Using standard size-item structure (like Page 2)
         itemDiv.innerHTML += `
-            <div class="flower-choice-card" style="padding: 12px; cursor: default; display:flex; flex-direction:column; justify-content:space-between; border: none;">
-                <img src="${imgPath}" alt="${flower}" class="flower-choice-img" style="width: 100%; height: auto; object-fit: contain; padding: 5px;">
+            <div class="size-item">
+                <div class="size-img">
+                    <img src="${imgPath}" alt="${flower}">
+                </div>
                 
                 <div class="quantity-control" style="justify-content:center; margin-top:auto;">
                     <button class="qty-btn" onclick="changeVaseQty(${sizeIdx}, ${i}, '${flower}', -1)">−</button>
