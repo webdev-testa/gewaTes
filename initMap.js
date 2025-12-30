@@ -7,10 +7,12 @@ async function initMap() {
     // Default center (Jakarta)
     const jakarta = { lat: -6.2088, lng: 106.8456 };
 
+    console.log("Initializing Map..."); // Debug Log
+
     const map = new Map(document.getElementById("map"), {
         zoom: 13,
         center: jakarta,
-        mapId: "DEMO_MAP_ID", // Required for AdvancedMarkerElement
+        mapId: "DEMO_MAP_ID", 
         mapTypeControl: false,
         fullscreenControl: false,
         streetViewControl: false
@@ -21,39 +23,59 @@ async function initMap() {
         componentRestrictions: { country: "id" } // Limit to Indonesia
     });
     
-    // Append it to our container div
-    document.getElementById("autocomplete-container").appendChild(autocomplete);
+    // Append to the external container to ensure events fire correctly
+    const container = document.getElementById("autocomplete-container");
+    if (container) {
+        container.appendChild(autocomplete);
+    } else {
+        console.error("Autocomplete container not found!");
+    }
+    
+    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(autocomplete); // REMOVED
 
     // Initial Marker
     const marker = new AdvancedMarkerElement({
         map: map,
         position: jakarta,
-        gmpDraggable: true, // New property for draggable in AdvancedMarkerElement
+        gmpDraggable: true, 
         title: "Drag me!"
     });
 
     // Listener for when user selects a place
-    autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-        // We need to fetch the fields we want (location is essential)
-        await place.fetchFields({ fields: ["displayName", "formattedAddress", "location", "viewport"] });
+    autocomplete.addEventListener("gmp-placeselect", async (event) => {
+        const place = event.place;
+        console.log("Place Selected Event Fired!", place);
 
-        if (!place.location) {
-            window.alert("No details available for input: '" + place.displayName + "'");
-            return;
+        try {
+            // We need to fetch the fields we want
+            await place.fetchFields({ fields: ["displayName", "formattedAddress", "location", "viewport"] });
+
+            console.log("Place Fields Fetched:", {
+                address: place.formattedAddress,
+                location: place.location,
+                viewport: place.viewport
+            });
+
+            if (!place.location) {
+                window.alert("No location details available for input: '" + place.displayName + "'");
+                return;
+            }
+
+            // Fit bounds or set center
+            if (place.viewport) {
+                map.fitBounds(place.viewport);
+            } else {
+                map.setCenter(place.location);
+                map.setZoom(17);
+            }
+
+            // Move marker
+            marker.position = place.location;
+
+        } catch (error) {
+            console.error("Error fetching place details:", error);
+            window.alert("Error getting place details: " + error.message);
         }
-
-        // Fit bounds or set center
-        if (place.viewport) {
-            map.fitBounds(place.viewport);
-        } else {
-            map.setCenter(place.location);
-            map.setZoom(17);
-        }
-
-        // Move marker
-        marker.position = place.location;
-
-        console.log("Selected Place:", place.formattedAddress, place.location.toJSON());
     });
 
     // Listener for dragging the Advanced Marker
