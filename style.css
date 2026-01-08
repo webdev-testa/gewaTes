@@ -110,6 +110,11 @@ textarea:focus {
   outline: none;
   border-color: #667eea;
 }
+.info-text {
+  font-size: 12px;
+  color: #718096;
+  margin-top: 4px;
+}
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -507,6 +512,7 @@ textarea:focus {
 /* Date Time Row and Input Styles from tesMap */
 .date-time-row {
   display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -515,10 +521,7 @@ textarea:focus {
 }
 
 @media (max-width: 480px) {
-  .date-time-row {
-    flex-direction: column;
-    gap: 12px;
-  }
+  /* .date-time-row rules removed as they are now global */
 }
 
 /* Custom Icons for Date and Time */

@@ -190,6 +190,14 @@ function goToPage4() {
   const today = new Date().toISOString().split('T')[0];
   dateInput.setAttribute('min', today);
 
+  // Set Info Text
+  const infoEl = document.getElementById("deliveryDateInfo");
+  if (currentProduct.type === "hand-bouquet" || currentProduct.type === "decoration") {
+      infoEl.innerText = "Pre Order H-7. Jika kurang dari itu (maksimal H-5) dikenakan additional service fee IDR 35K/hari. Harap konfirmasi kestersediaan dengan admin By Gewa.";
+  } else {
+      infoEl.innerText = "Pre Order H-3. Jika kurang dari itu, diharap konfirmasi kestersediaan dengan admin By Gewa.";
+  }
+
   // Check if this is the 2nd+ product
   const isFirstProduct = orderData.selectedProducts.length === 1;
   const sameDeliveryGroup = document.getElementById("sameDeliveryGroup");
@@ -360,7 +368,11 @@ function goToPage5() {
           room: vRoom
       });
   } else {
-      dAddr = document.getElementById("deliveryAddress").value.trim();
+      if (window.getFinalDeliveryAddress) {
+          dAddr = window.getFinalDeliveryAddress();
+      } else {
+          dAddr = document.getElementById("deliveryAddress").value.trim();
+      }
       if (!dAddr) {
         alert("Please fill in Delivery Address.");
         return;
