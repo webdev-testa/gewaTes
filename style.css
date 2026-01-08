@@ -157,7 +157,7 @@ textarea:focus {
 .size-options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px; /* Reduced from 16px */
+  gap: 16px;
   margin-top: 20px;
 }
 .size-item {
