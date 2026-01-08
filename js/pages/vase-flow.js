@@ -57,8 +57,8 @@ function renderVasePage(product) {
               <label style="font-size:14px;">Reference Image (Optional)</label>
               <input type="file" accept="image/*" id="vase-ref-img-${sizeIdx}-${i}" 
                     style="font-size: 14px;" onchange="handleImageUpload(this)">
-              <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-                Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+              <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+                Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
               </div>
               <input type="hidden" id="vase-ref-img-data-${sizeIdx}-${i}">
             </div>
@@ -149,10 +149,7 @@ function manualVaseQtyChange(sizeIdx, itemIdx, flower, val) {
   // Check limits
   if (newVal > limits.maxPerType) {
     alert(`Max ${limits.maxPerType} of ${flower} allowed for ${sizeObj.size}.`);
-    el.value = 0; // Reset or revert? Reset is safer if we don't track old val. 
-    // Ideally we revert to 0 or previous acceptable. 0 is safe.
-    // Or better: Re-calculate what is max possible? No, just alert and reset to 0 or clamp?
-    // Let's clamp to maxPerType.
+    el.value = 0; // Reset is safer if we don't track old val. 
     el.value = limits.maxPerType;
     newVal = limits.maxPerType;
   }

@@ -83,16 +83,11 @@ function renderYoonaInputs(item, sIdx, iIdx) {
            oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
   </div>`;
 
-  // Photo Upload (Simulated with text for now, or just a file input that doesn't really upload to server in this demo context, relying on JS object)
-  // But user said "upload foto". 
-  // Since we are posting to Google Sheet, we might can't easily upload distinct files. 
-  // Usually we might just ask for a link or use a dummy file input. 
-  // The Prompt says "upload foto". I will add a file input.
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label">
-    <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-        Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+    <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+        Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
   </div>`;
 
@@ -119,8 +114,8 @@ function renderBasketFlowInputs(item, sIdx, iIdx, sizeName) {
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
         <input type="file" accept="image/*" class="file-upload-label">
-        <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+        <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
         </div>
     </div>
   </div>`;
@@ -172,8 +167,8 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
         <input type="file" accept="image/*" class="file-upload-label">
-        <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+        <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
         </div>
     </div>
   </div>`;
@@ -220,8 +215,8 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label">
-    <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-        Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+    <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+        Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
   </div>`;
 
@@ -263,8 +258,8 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
      <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Unggah Logo (Jika Ada)</label>
       <input type="file" accept="image/*">
-       <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-          Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+       <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+          Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
        </div>
     </div>
 
