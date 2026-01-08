@@ -246,6 +246,10 @@ function goToPage4() {
   }
 
   showPage(4);
+  
+  if (window.refreshMap) {
+      window.refreshMap();
+  }
 }
 
 function toggleSameDelivery() {

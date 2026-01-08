@@ -95,14 +95,14 @@ input[type="date"],
 input[type="time"],
 textarea {
   width: 100%;
-  max-width: 100%; /* Prevent overflow on iOS */
+  max-width: 100%; 
   padding: 12px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.2s;
   background-color: #ffffff;
-  -webkit-appearance: none; /* Reset iOS default styling */
+  -webkit-appearance: none; 
   appearance: none;
 }
 
@@ -112,7 +112,7 @@ input[type="date"] {
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 20px;
-  padding-right: 40px; /* Space for icon */
+  padding-right: 40px; 
 }
 
 input[type="time"] {
@@ -120,10 +120,9 @@ input[type="time"] {
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 20px;
-  padding-right: 40px; /* Space for icon */
+  padding-right: 40px; 
 }
 
-/* Hide native icon but keep it clickable coverage over the whole input */
 input[type="date"],
 input[type="time"] {
   position: relative;
@@ -156,7 +155,7 @@ input[type="time"]:valid::-webkit-datetime-edit {
 input[type="date"]:invalid::-webkit-datetime-edit::before,
 input[type="time"]:invalid::-webkit-datetime-edit::before {
     content: attr(placeholder);
-    color: #9ca3af; /* Gray placeholder text */
+    color: #9ca3af; 
     position: absolute;
     left: 0px; 
     pointer-events: none;
@@ -182,12 +181,10 @@ textarea:focus {
   text-align: center;
 }
 .product-card:hover {
-  /* border-color: #667eea; Removed for borderless look */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 .product-card.selected {
-  /* border-color: #667eea; Removed */
   background: #eef2ff;
 }
 .product-img {
@@ -214,13 +211,12 @@ textarea:focus {
 .size-options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px; /* Reduced from 16px */
+  gap: 8px; 
   margin-top: 20px;
 }
 .size-item {
-  /* Removed border */
   border-radius: 12px;
-  padding: 0; /* Removed padding */
+  padding: 0; 
   display: flex;
   flex-direction: column;
   gap: 8px;
