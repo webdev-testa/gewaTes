@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Test Map - Delivery Details</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Map Container & Floating Search */
+        .map-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden; /* Ensure map corners don't bleed */
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            border-radius: 0; /* Reset since container handles radius */
+        }
+
+        .search-box-wrapper {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 24px; /* Pill shape */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            padding: 2px 12px;
+        }
+
+        #pac-input {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 14px;
+            border: none;
+            outline: none;
+            background: transparent;
+            margin-bottom: 0; /* Override default */
+        }
+        
+        .clear-search-btn {
+            background: none;
+            border: none;
+            color: #718096;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+        .clear-search-btn:hover {
+            color: #2d3748;
+        }
+        
+        .search-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            color: #718096;
+            pointer-events: none; /* Let clicks pass through if needed, mainly visual */
+        }
+
+        /* Search Bar Visibility */
+        gmp-place-autocomplete {
+            /* Force text colors to be visible */
+            --gmp-px-color-text-primary: #000000;
+            --gmp-px-color-text-secondary: #444444;
+            --gmp-px-color-background: #ffffff;
+            
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="card">
+        <!-- Page 4: Delivery Details (Active for testing) -->
+        <div class="page active" id="page4">
+          <h1>Delivery Details</h1>
+          <p class="description">
+            When and where should we deliver your order?
+          </p>
+
+          <div class="form-group" id="sameDeliveryGroup" style="display: none;">
+            <input type="checkbox" id="sameDelivery" onchange="toggleSameDelivery()" />
+            <label for="sameDelivery" style="display:inline; font-weight:normal;">Same delivery details as first product</label>
+          </div>
+
+          <div class="date-time-row">
+            <div class="form-group">
+              <label>Delivery Date *</label>
+              <input type="date" id="deliveryDate" required placeholder="Select Date" />
+            </div>
+
+            <div class="form-group">
+              <label>Delivery Time *</label>
+              <input type="time" id="deliveryTime" required placeholder="Select Time" />
+            </div>
+          </div>
+
+          <!-- Map Integration Section -->
+          <div class="form-group">
+            <label>Address</label>
+            <p class="map-instruction" style="margin: 0 0 10px 0; color: #718096; font-size: 0.9em;">Move the pin to the exact drop-off spot.</p>
+            
+            <div class="map-container">
+                <div class="search-box-wrapper">
+                    <input id="pac-input" class="controls" type="text" placeholder="Search Address">
+                    <div id="search-icon" class="search-icon">
+                        <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" fill="#718096"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+                    </div>
+                    <button id="clear-search" class="clear-search-btn" onclick="clearSearchBox()" title="Clear" style="display:none;">✕</button>
+                </div>
+                <div id="map"></div>
+            </div>
+          </div>
+
+          <div class="form-group" id="std-address-group">
+            <label>Address Details <span style="font-weight: normal; font-size: 0.85em; color: #718096; margin-left: 4px;">(Floor, Unit number, etc.)</span></label>
+            <input type="text" id="addressDetails" placeholder="e.g. Lt 2, Unit 5B" style="margin-bottom: 10px;" />
+            
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="manualAddressToggle" onchange="toggleManualAddress()">
+                <label for="manualAddressToggle" style="display:inline; font-weight:normal; font-size: 0.9em;">I want to correct the address manually</label>
+            </div>
+
+            <textarea
+              id="deliveryAddress"
+              rows="3"
+              placeholder="Type your full address here..."
+              style="display: none;"
+            ></textarea>
+            <p id="selectedAddressDisplay" style="color: #4a5568; font-size: 0.9em; font-style: italic; margin-top: 5px;">No address selected from map.</p>
+          </div>
+
+          <!-- Decoration Specific Delivery Fields -->
+          <div id="decorationDeliveryFields" style="display: none;">
+            <div class="form-group">
+                <label>📍 Alamat Venue *</label>
+                <input type="text" id="decVenueName" placeholder="Nama Venue, contoh: Nomu Cafe" style="margin-bottom:8px;" />
+                <input type="text" id="decVenueAddress" placeholder="Alamat Venue" style="margin-bottom:8px;" />
+                <input type="text" id="decVenueFloor" placeholder="Lantai" style="margin-bottom:8px;" />
+                <input type="text" id="decVenueRoom" placeholder="Ruangan" />
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="alert('Back button clicked')">
+              Back
+            </button>
+            <button class="btn btn-primary" onclick="alert('Next button clicked')">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modern Google Maps Bootstrap Loader -->
+    <!-- Load config first -->
+    <script src="config.js"></script>
+
+    <script>
+      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+        key: GOOGLE_MAPS_API_KEY,
+        v: "weekly"
+      });
+    </script>
+
+    <!-- Load the custom script first so the 'initMap' function is defined -->
+    <!-- Load the custom script first so the 'initMap' function is defined -->
+    <script src="initMap.js"></script>
+    <script>
+        // Set min date to today for native date input
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("deliveryDate").setAttribute('min', today);
+        
+        // Mock function for toggleSameDelivery if needed
+        function toggleSameDelivery() {
+            console.log("Toggle same delivery");
+        }
+    </script>
+</body>
+</html>

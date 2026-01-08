@@ -185,22 +185,10 @@ function goToPage4() {
 
   // Setup Page 4 (Delivery)
 
-  // Initialize Flatpickr
+  // Set min date to today for native date input
   const dateInput = document.getElementById("deliveryDate");
-  // Destroy previous instance if exists to prevent duplicates
-  if (dateInput._flatpickr) {
-    dateInput._flatpickr.destroy();
-  }
-
-  const today = new Date();
-  const minDate = new Date(today);
-  minDate.setDate(today.getDate() + 3);
-
-  flatpickr("#deliveryDate", {
-    minDate: minDate,
-    dateFormat: "Y-m-d", 
-    disableMobile: "true" 
-  });
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', today);
 
   // Check if this is the 2nd+ product
   const isFirstProduct = orderData.selectedProducts.length === 1;
@@ -290,24 +278,6 @@ function toggleInputState(disabled) {
 
 function goToPage5() {
   const dDate = document.getElementById("deliveryDate").value;
-
-  // Validate Date Restriction (Today + 3)
-  if (dDate) {
-    const today = new Date();
-    today.setDate(today.getDate() + 3);
-    // Reset time part for accurate comparison
-    today.setHours(0,0,0,0);
-    
-    // Parse selected string to date
-    const selected = new Date(dDate);
-    selected.setHours(0,0,0,0);
-
-    if (selected < today) {
-       alert("Order date must be at least 3 days from today. Please select a valid date.");
-       return;
-    }
-  }
-
   const dTime = document.getElementById("deliveryTime").value;
   
   // Address Handling
@@ -447,22 +417,7 @@ function renderReviewPage() {
 }
 
 function initReviewFlatpickr() {
-  const inputs = document.querySelectorAll(".flatpickr-review-date");
-  if (inputs.length === 0) return;
-
-  const today = new Date();
-  const minDate = new Date(today);
-  minDate.setDate(today.getDate() + 3);
-
-  flatpickr(inputs, {
-    minDate: minDate,
-    dateFormat: "Y-m-d", 
-    disableMobile: "true",
-    onChange: function(selectedDates, dateStr, instance) {
-       const pIdx = instance.element.dataset.pidx;
-       updateProductDelivery(pIdx, 'date', dateStr);
-    }
-  });
+  // Native date inputs handle this now
 }
 
 function renderCustomerSection() {
@@ -547,7 +502,7 @@ function renderProductBlock(prod, pIdx) {
     html += `
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Date</label>
-        <input type="text" class="flatpickr-review-date" data-pidx="${pIdx}" value="${prod.delivery.date}">
+        <input type="date" class="review-date-input" data-pidx="${pIdx}" value="${prod.delivery.date}" onchange="updateProductDelivery(${pIdx}, 'date', this.value)" min="${new Date().toISOString().split('T')[0]}">
       </div>
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Time</label>
