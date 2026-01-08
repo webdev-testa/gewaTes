@@ -240,9 +240,17 @@ function goToPage4() {
     sameDeliveryGroup.style.display = "block";
     sameDeliveryCheckbox.checked = false; // Reset by default
     toggleInputState(false); // Enable inputs
+    const addr = currentProduct.delivery?.address;
+    if (!addr && window.resetMap) {
+        window.resetMap();
+    }
+    
   } else {
     sameDeliveryGroup.style.display = "none";
     toggleInputState(false);
+    if (!currentProduct.delivery?.address && window.resetMap) {
+        window.resetMap();
+    }
   }
 
   showPage(4);
@@ -256,15 +264,59 @@ function toggleSameDelivery() {
   const checkbox = document.getElementById("sameDelivery");
   const isChecked = checkbox.checked;
   const firstProd = orderData.selectedProducts[0];
+  
+  const currentProduct = orderData.selectedProducts[orderData.selectedProducts.length - 1];
+  const manualToggle = document.getElementById("manualAddressToggle");
+  const manualInput = document.getElementById("deliveryAddress");
 
   if (isChecked && firstProd && firstProd.delivery) {
+    // Fill values
     document.getElementById("deliveryDate").value = firstProd.delivery.date;
     document.getElementById("deliveryTime").value = firstProd.delivery.time;
-    document.getElementById("deliveryAddress").value =
-      firstProd.delivery.address;
+    
+    // Disable Date/Time interactions
     toggleInputState(true);
+
+    const addr = firstProd.delivery.address;
+    
+    // For Decoration flow, we might need to parse, but usually we just fill the fields
+    if (currentProduct.type === "decoration") {
+        // Re-use logic to fill venue fields
+        try {
+            const parsed = JSON.parse(addr);
+            document.getElementById("decVenueName").value = parsed.venue || "";
+            document.getElementById("decVenueAddress").value = parsed.address || "";
+            document.getElementById("decVenueFloor").value = parsed.floor || "";
+            document.getElementById("decVenueRoom").value = parsed.room || "";
+        } catch(e) {
+             document.getElementById("decVenueAddress").value = addr;
+        }
+    } else {
+        // Standard flow
+        document.getElementById("deliveryAddress").value = addr;
+        
+        // Auto-check "I want to correct manualy" so the textarea is shown
+        if (manualToggle) {
+            manualToggle.checked = true;
+            // We need to trigger the UI update that toggleManualAddress does
+            if (window.toggleManualAddress) {
+                window.toggleManualAddress(); 
+            } else {
+                // Fallback if function not accessible (though it should be)
+                if (manualInput) manualInput.style.display = "block";
+                const displayEl = document.getElementById("selectedAddressDisplay");
+                if (displayEl) displayEl.style.display = "none";
+            }
+        }
+    }
+    
   } else {
     toggleInputState(false);
+    
+    if (manualToggle) {
+        manualToggle.checked = false;
+        if (window.toggleManualAddress) window.toggleManualAddress();
+    }
   }
 }
 

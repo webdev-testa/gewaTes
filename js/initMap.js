@@ -113,7 +113,19 @@ async function initMap() {
         window.selectedMapAddress = place.formatted_address;
         updateAddressDisplay();
     });
-    // Try HTML5 Geolocation
+    // Expose reset function that has access to map/marker
+    window.fullMapReset = function() {
+         window.selectedMapAddress = "";
+         input.value = "";
+         input.dispatchEvent(new Event('input'));
+         updateAddressDisplay();
+         
+         // Reset to default
+         map.setCenter(defaultLocation);
+         map.setZoom(13);
+         marker.position = defaultLocation;
+    };
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -136,7 +148,6 @@ async function initMap() {
     }
 }
 
-// Call initMap when the script loads (since we removed the callback from the script tag)
 // Call initMap when the script loads
 initMap();
 
@@ -168,8 +179,7 @@ function updateAddressDisplay() {
 
     // Update input for Decoration flow
     if (decVenueAddress) {
-        // Only update if it's empty or the user just picked a map location (assumed intent)
-        // Or just always update it? Let's always update it if it's visible.
+        // Only update if it's empty or the user just picked a map location
         if (decVenueAddress.offsetParent !== null) { // Checks if visible
              decVenueAddress.value = address;
         }
@@ -229,5 +239,29 @@ window.clearSearchBox = function() {
         // Trigger event to update icons
         const event = new Event('input');
         input.dispatchEvent(event);
+    }
+};
+
+window.resetMap = function() {
+    if (window.fullMapReset) {
+         window.fullMapReset(); // Use the powerful one if available (inside initMap scope)
+         return;
+    }
+    
+    // Fallback if fullMapReset isn't ready
+    console.log("Resetting map state (fallback)...");
+    window.selectedMapAddress = "";
+    
+    // Clear search box
+    const input = document.getElementById("pac-input");
+    if (input) {
+        input.value = "";
+        input.dispatchEvent(new Event('input')); // Update icons
+    }
+    
+    // Clear display text
+    const displayEl = document.getElementById("selectedAddressDisplay");
+    if (displayEl) {
+        displayEl.textContent = "No address selected from map.";
     }
 };
