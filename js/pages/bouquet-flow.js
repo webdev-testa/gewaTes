@@ -17,8 +17,8 @@ function renderBouquetPage(currentProduct) {
           <label style="font-size:14px;">Reference Image (Optional)</label>
           <input type="file" accept="image/*" id="ref-img-${sizeIdx}-${i}" 
                 style="font-size: 14px;" onchange="handleImageUpload(this)">
-          <div style="font-size: 12px; color: #e53e3e; margin-top: 4px;">
-            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #e53e3e;">Click here</a>
+          <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+            Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
           </div>
           <input type="hidden" id="ref-img-data-${sizeIdx}-${i}">
         </div>`;
