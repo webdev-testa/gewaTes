@@ -23,15 +23,26 @@ function renderDecorationPage2() {
 
         <div class="quantity-control" style="justify-content: center;">
             <button class="qty-btn" onclick="changeDecorationPax(-1)">−</button>
-            <input type="number" class="qty-input" id="dec-pax-display" value="0" min="0" onchange="manualDecorationPaxChange(this.value)" onfocus="this.select()">
+            <input type="number" class="qty-input" id="dec-pax-display" value="0" min="0" onchange="manualDecorationPaxChange(this.value)" oninput="checkPaxMismatch()" onfocus="this.select()">
             <button class="qty-btn" onclick="changeDecorationPax(1)">+</button>
         </div>
     </div>
 
     <div class="form-group" style="margin-top: 24px;">
         <label>📃 Sertakan List Nama Orang yang Menghadiri Acara</label>
-        <p style="font-size: 14px; color: #718096; margin-bottom: 8px;">Masukkan juga nama kamu, jika kamu menjadi tuan acara</p>
-        <textarea rows="6" id="dec-guest-list-input" placeholder="List names here..."></textarea>
+        <p style="font-size: 14px; color: #718096; margin-bottom: 8px;">Masukkan juga nama kamu, jika kamu menjadi tuan acara. Pisahkan dengan Enter.</p>
+        <textarea rows="6" id="dec-guest-list-input" 
+          placeholder="List names here (separated by enter or comma)..." 
+          onblur="cleanGuestListInput(this)" 
+          oninput="updateGuestCounter(this)"></textarea>
+         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px;">
+             <div id="pax-mismatch-warning" style="font-size: 13px; color: #e53e3e; display:none; flex: 1; padding-right: 8px;">
+                ⚠️ Mismatch: List has <span id="list-count-val">0</span> names but Pax is <span id="pax-val">0</span>.
+             </div>
+             <div id="guest-list-counter" style="font-size: 13px; color: #2d3748; font-weight: 600; white-space: nowrap;">
+                ✅ 0 names detected
+             </div>
+         </div>
     </div>
   `;
   sizeOptionsDiv.appendChild(container);
@@ -39,11 +50,82 @@ function renderDecorationPage2() {
   showPage(2);
 }
 
+function cleanGuestListInput(textarea) {
+    const raw = textarea.value;
+    if (!raw.trim()) return;
+
+    // Split by newlines, commas, or semicolons
+    const lines = raw.split(/[\n,;]+/);
+    
+    const cleaned = lines
+        .map(line => {
+            // Remove leading bullets, numbers (1., 2.), dashes, etc.
+            return line.replace(/^[\s\d\.\-\•\*]+/, '').trim();
+        })
+        .filter(line => line.length > 0); // Remove empty lines
+
+    // Join back with newlines
+    textarea.value = cleaned.join("\n");
+    updateGuestCounter(textarea);
+}
+
+function updateGuestCounter(textarea) {
+    const raw = textarea.value;
+    const count = raw.split(/[\n,;]+/)
+        .map(l => l.trim())
+        .filter(l => l.length > 0).length;
+
+    const counterEl = document.getElementById("guest-list-counter");
+    if (counterEl) {
+        if (count > 0) {
+           // Always visible if > 0 to match user request context usually,
+           // or we can hide if 0. Structure above assumes it might be hidden initially.
+           counterEl.style.display = "block";
+           counterEl.innerText = `✅ ${count} name${count !== 1 ? 's' : ''} detected`;
+        } else {
+           counterEl.style.display = "none";
+        }
+    }
+    
+    checkPaxMismatch(count);
+}
+
+function checkPaxMismatch(listCount) {
+    // If listCount is not passed, calculate it
+    if (listCount === undefined) {
+        const textarea = document.getElementById("dec-guest-list-input");
+        const raw = textarea ? textarea.value : "";
+        listCount = raw.split(/[\n,;]+/)
+            .map(l => l.trim())
+            .filter(l => l.length > 0).length;
+    }
+
+    const paxInput = document.getElementById("dec-pax-display");
+    const pax = parseInt(paxInput.value) || 0;
+    
+    const warningEl = document.getElementById("pax-mismatch-warning");
+    const listCountVal = document.getElementById("list-count-val");
+    const paxVal = document.getElementById("pax-val");
+
+    if (warningEl && listCount > 0) { // Only warn if there is a list
+        if (listCount !== pax) {
+            warningEl.style.display = "block";
+            if(listCountVal) listCountVal.innerText = listCount;
+            if(paxVal) paxVal.innerText = pax;
+        } else {
+            warningEl.style.display = "none";
+        }
+    } else if (warningEl) {
+        warningEl.style.display = "none";
+    }
+}
+
 function changeDecorationPax(delta) {
   const display = document.getElementById("dec-pax-display");
   let val = parseInt(display.value) || 0;
   val = Math.max(0, val + delta);
   display.value = val;
+  checkPaxMismatch();
 }
 
 function manualDecorationPaxChange(val) {
@@ -51,6 +133,7 @@ function manualDecorationPaxChange(val) {
    let v = parseInt(val) || 0;
    v = Math.max(0, v);
    display.value = v;
+   checkPaxMismatch();
 }
 
 function handleDecorationPage2Next(currentProduct) {

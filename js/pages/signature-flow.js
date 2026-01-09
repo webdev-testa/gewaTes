@@ -219,6 +219,19 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
         Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
   </div>`;
+  
+  // Wrap Color (Reuse wrapOptions from constants.js)
+  html += `<div class="form-group">
+    <label>Box/Wrap Color *</label>
+    <div class="color-options">`;
+  
+  wrapOptions.forEach(opt => {
+     const isSelected = item.wrapColor === opt ? "selected" : "";
+     html += `<button class="color-btn ${isSelected}" data-wrap-color="${opt}"
+          onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
+  });
+  
+  html += `</div></div>`;
 
   html += `<hr style="margin: 24px 0; border: 0; border-top: 1px solid #e2e8f0;">`;
 
@@ -340,7 +353,8 @@ function validateAndSaveSignatureOrder(product) {
       } else if (sName === "Bloom box") {
         if (!item.wrapColor || !item.color) isValid = false;
       } else if (sName === "Acrylic Bloom box") {
-         if (!item.color) isValid = false;
+         // Added wrapColor validation
+         if (!item.color || !item.wrapColor) isValid = false;
       }
     });
   });
@@ -385,6 +399,7 @@ function getSignatureReviewHTML(item, size, isEdit, pIdx, sIdx, iIdx) {
          if (item.greeting) html += `<div>Card: "${item.greeting}"</div>`;
       } else if (sName === "Acrylic Bloom box") {
         html += `<div>Color: ${item.color || '-'}</div>`;
+        html += `<div>Wrap Color: ${item.wrapColor || '-'}</div>`;
         if (item.acrylic) {
           html += `<div>Acrylic: ${item.acrylic.header || ''} ${item.acrylic.receiver ? 'for ' + item.acrylic.receiver : ''}</div>`;
         }
@@ -442,6 +457,14 @@ function renderBloomBoxReviewInputs(item, pIdx, sIdx, iIdx) {
 function renderAcrylicReviewInputs(item, pIdx, sIdx, iIdx) {
   if (!item.acrylic) item.acrylic = {};
   let html = `<div class="form-group"><label>Flower Color</label><input type="text" value="${item.color || ''}" oninput="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'color', this.value)"></div>`;
+  
+  html += `<div class="form-group"><label>Box/Wrap Color</label><div class="color-options">`;
+  wrapOptions.forEach(opt => {
+     const isSelected = item.wrapColor === opt ? "selected" : "";
+     html += `<button class="color-btn ${isSelected}" onclick="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
+  });
+  html += `</div></div>`;
+
   html += `<hr style="margin:12px 0; border-top:1px solid #ddd;">`;
   html += `<div class="form-group"><label>Header</label><input type="text" placeholder="Selamat..." value="${item.acrylic.header || ''}" oninput="updateSignatureReviewAcrylic(${pIdx}, ${sIdx}, ${iIdx}, 'header', this.value)"></div>`;
   html += `<div class="form-group"><label>Event</label><input type="text" placeholder="Grand Opening..." value="${item.acrylic.event || ''}" oninput="updateSignatureReviewAcrylic(${pIdx}, ${sIdx}, ${iIdx}, 'event', this.value)"></div>`;

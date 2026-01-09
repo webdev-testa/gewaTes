@@ -1,3 +1,66 @@
+:root {
+    --brand-pink-dark: #FFCCDF;
+    --brand-pink-light: #FFEFF5;
+    --brand-tosca-dark: #B4C8CB;
+    --brand-tosca-light: #E7EDEE;
+    
+    /* Semantic Colors (Brand Default) */
+    --primary-color: var(--brand-pink-dark);
+    --primary-color-hover: #f7a0c1;
+    --secondary-color: var(--brand-tosca-dark);
+    --bg-gradient-start: var(--brand-tosca-light);
+    --bg-gradient-end: var(--brand-pink-light);
+    --text-on-primary: #1a202c; 
+    --selection-bg: var(--brand-pink-light);
+    --selection-border: var(--brand-pink-dark);
+}
+
+/* Bouquet Theme */
+[data-theme="bouquet"] {
+    --primary-color: #FF7BBC;       /* Darker Pink */
+    --primary-color-hover: #FFB8E5; /* Pink (Med) - used for hover state */
+    --selection-bg: #FEEFF6;        /* Light Pink */
+    --selection-border: #FF7BBC;
+    --text-on-primary: #ffffff;     /* Better contrast on hot pink */
+}
+
+/* Hand Bouquet Theme */
+[data-theme="hand-bouquet"] {
+    --primary-color: #BD2F31;       /* Darker Red */
+    --primary-color-hover: #DF6A6C; /* Red */
+    --selection-bg: #F6ACAE;        /* Light Red */
+    --selection-border: #BD2F31;
+    --text-on-primary: #ffffff;     /* White text on dark red */
+}
+
+/* Vase Theme */
+[data-theme="vase"] {
+    --primary-color: #9ACB63;       /* Darker Green */
+    --primary-color-hover: #DEF6BD; /* Green */
+    --selection-bg: #F5FFEB;        /* Light Green */
+    --selection-border: #9ACB63;
+    --text-on-primary: #1a202c;     /* Dark text on lime green */
+}
+
+/* Signature Theme */
+[data-theme="signature"] {
+    --primary-color: #C461D6;       /* Darker Purple */
+    --primary-color-hover: #EEB4FF; /* Purple */
+    --selection-bg: #FDF5FF;        /* Light Purple */
+    --selection-border: #C461D6;
+    --text-on-primary: #ffffff;     /* White text on purple */
+}
+
+/* Decoration Theme */
+[data-theme="decoration"] {
+    --primary-color: #96D0FF;       /* Darker Blue */
+    --primary-color-hover: #D0EAFF; /* Blue */
+    --selection-bg: #F0F8FF;        /* Light Blue */
+    --selection-border: #96D0FF;
+    --text-on-primary: #1a202c;     /* Dark text on light blue */
+}
+
+
 @font-face {
     font-family: 'Helvetica World';
     src: url('fonts/HelveticaWorld-Bold.eot');
@@ -57,7 +120,7 @@ body {
   font-family: "Helvetica World", "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 0;
   margin: 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   min-height: 100vh;
 }
 .container {
@@ -108,7 +171,12 @@ textarea {
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary-color);
+}
+.info-text {
+  font-size: 12px;
+  color: #718096;
+  margin-top: 4px;
 }
 .product-grid {
   display: grid;
@@ -125,13 +193,13 @@ textarea:focus {
   text-align: center;
 }
 .product-card:hover {
-  /* border-color: #667eea; Removed for borderless look */
+  /* border-color: var(--primary-color); Removed for borderless look */
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
 }
 .product-card.selected {
-  /* border-color: #667eea; Removed */
-  background: #eef2ff;
+  /* border-color: var(--primary-color); Removed */
+  background: var(--selection-bg);
 }
 .product-img {
   width: 100%;
@@ -157,13 +225,13 @@ textarea:focus {
 .size-options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px; /* Reduced from 16px */
+  gap: 8px; 
   margin-top: 20px;
 }
 .size-item {
   /* Removed border */
   border-radius: 12px;
-  padding: 0; /* Removed padding */
+  padding: 0; 
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -171,7 +239,7 @@ textarea:focus {
 .size-img {
   width: 100%;
   height: auto;
-  background: #f7fafc;
+  background: white;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -179,6 +247,7 @@ textarea:focus {
   flex-shrink: 0;
   overflow: hidden;
   aspect-ratio: 1 / 1;
+  padding: 10px;
 }
 
 .size-img img {
@@ -196,10 +265,10 @@ textarea:focus {
 .qty-btn {
   width: 36px;
   height: 36px;
-  border: 2px solid #667eea;
+  border: 2px solid var(--primary-color);
   background: white;
   border-radius: 8px;
-  color: #667eea;
+  color: var(--primary-color); /* Kept as primary color for text since it's an outline button */
   font-size: 20px;
   cursor: pointer;
   display: flex;
@@ -208,8 +277,8 @@ textarea:focus {
   transition: all 0.2s;
 }
 .qty-btn:hover {
-  background: #667eea;
-  color: white;
+  background: var(--primary-color);
+  color: var(--text-on-primary);
 }
 .qty-btn:disabled {
   opacity: 0.3;
@@ -233,13 +302,13 @@ textarea:focus {
   margin-top: 24px;
 }
 .btn-primary {
-  background: #667eea;
-  color: white;
+  background: var(--primary-color);
+  color: var(--text-on-primary);
 }
 .btn-primary:hover {
-  background: #5a67d8;
+  background: var(--primary-color-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .btn-primary:disabled {
   opacity: 0.5;
@@ -297,8 +366,8 @@ textarea:focus {
   transition: all 0.2s;
 }
 .color-btn.selected {
-  border-color: #667eea;
-  background: #eef2ff;
+  border-color: var(--primary-color);
+  background: var(--selection-bg);
 }
 .greeting-card {
   margin-top: 12px;
@@ -343,7 +412,7 @@ textarea:focus {
 }
 .progress-fill {
   height: 100%;
-  background: #667eea;
+  background: var(--primary-color);
   transition: width 0.3s;
 }
 
@@ -399,13 +468,13 @@ textarea:focus {
 }
 
 .flower-choice-card:hover {
-    border-color: #ed64a6;
-    background-color: #fff5f7;
+    border-color: var(--primary-color);
+    background-color: var(--selection-bg);
 }
 
 .flower-choice-card.selected {
-    border-color: #ed64a6;
-    background-color: #fff5f7;
+    border-color: var(--primary-color);
+    background-color: var(--selection-bg);
 }
 
 .flower-choice-img {
@@ -443,9 +512,9 @@ textarea:focus {
 }
 
 .basket-color-btn.selected {
-    border-color: #ed64a6;
+    border-color: var(--primary-color);
     transform: scale(1.1);
-    box-shadow: 0 0 0 2px rgba(237, 100, 166, 0.4);
+    box-shadow: 0 0 0 2px rgba(255, 204, 223, 0.4); 
 }
 
 .basket-color-btn.selected::after {
@@ -500,12 +569,13 @@ textarea:focus {
 
 .qty-input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--primary-color);
 }
 
 /* Date Time Row and Input Styles from tesMap */
 .date-time-row {
   display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -514,10 +584,7 @@ textarea:focus {
 }
 
 @media (max-width: 480px) {
-  .date-time-row {
-    flex-direction: column;
-    gap: 12px;
-  }
+  /* .date-time-row rules removed as they are now global */
 }
 
 /* Custom Icons for Date and Time */
@@ -712,3 +779,19 @@ gmp-place-autocomplete {
     font-family: inherit;
 }
 
+.banner-img {
+    width: 100%;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Match card shadow */
+}
+
+@media (max-width: 480px) {
+    .banner-img {
+        width: 100%;
+        margin: 0 0 16px 0;
+    }
+}

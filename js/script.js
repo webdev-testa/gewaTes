@@ -63,6 +63,9 @@ function goToPage2() {
   // Reset class to default grid
   sizeOptionsDiv.className = "size-options";
   
+  // Set Theme
+  setTheme(productType);
+
   renderSizeOptionsHTML(sizeOptionsDiv, productType);
 
   // Intercept for Decoration Flow
@@ -72,6 +75,14 @@ function goToPage2() {
   }
 
   showPage(2);
+}
+
+function setTheme(type) {
+    if (type) {
+        document.body.setAttribute('data-theme', type);
+    } else {
+        document.body.removeAttribute('data-theme');
+    }
 }
 
 function changeQty(size, delta) {
@@ -189,6 +200,14 @@ function goToPage4() {
   const dateInput = document.getElementById("deliveryDate");
   const today = new Date().toISOString().split('T')[0];
   dateInput.setAttribute('min', today);
+
+  // Set Info Text
+  const infoEl = document.getElementById("deliveryDateInfo");
+  if (currentProduct.type === "hand-bouquet" || currentProduct.type === "decoration") {
+      infoEl.innerText = "Pre Order H-7. Jika kurang dari itu (maksimal H-5) dikenakan additional service fee IDR 35K/hari. Harap konfirmasi kestersediaan dengan admin By Gewa.";
+  } else {
+      infoEl.innerText = "Pre Order H-3. Jika kurang dari itu, diharap konfirmasi kestersediaan dengan admin By Gewa.";
+  }
 
   // Check if this is the 2nd+ product
   const isFirstProduct = orderData.selectedProducts.length === 1;
@@ -360,7 +379,11 @@ function goToPage5() {
           room: vRoom
       });
   } else {
-      dAddr = document.getElementById("deliveryAddress").value.trim();
+      if (window.getFinalDeliveryAddress) {
+          dAddr = window.getFinalDeliveryAddress();
+      } else {
+          dAddr = document.getElementById("deliveryAddress").value.trim();
+      }
       if (!dAddr) {
         alert("Please fill in Delivery Address.");
         return;
@@ -692,6 +715,12 @@ function showPage(num) {
   }
 
   currentPage = num;
+  
+  // Theme reset for global pages
+  if (num === 1 || num === 5) {
+      setTheme(null); // Revert to brand default
+  }
+
   updateProgressBar(num);
   window.scrollTo(0, 0);
 }
