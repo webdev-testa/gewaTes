@@ -778,3 +778,20 @@ gmp-place-autocomplete {
     box-sizing: border-box;
     font-family: inherit;
 }
+
+.banner-img {
+    width: 100%;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Match card shadow */
+}
+
+@media (max-width: 480px) {
+    .banner-img {
+        width: 100%;
+        margin: 0 0 16px 0;
+    }
+}
