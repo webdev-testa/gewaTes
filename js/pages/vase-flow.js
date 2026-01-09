@@ -6,12 +6,18 @@ function renderVasePage(product) {
     const limits = vaseLimits[sizeObj.size]; // e.g. "Petite"
     const maxTotal = limits.maxTotal;
 
+    // 1. Header outside
+    const sizeHeader = document.createElement("div");
+    sizeHeader.className = "order-item-header";
+    sizeHeader.innerText = `${productEmojis[product.type]} ${sizeObj.size} (Qty: ${sizeObj.quantity})`;
+    container.appendChild(sizeHeader);
+
     for (let i = 0; i < sizeObj.quantity; i++) {
+        // 2. Item Container
       const itemDiv = document.createElement("div");
       itemDiv.className = "order-item";
-      itemDiv.innerHTML = `<div class="order-item-header">Vase - ${
-        sizeObj.size
-      } (Item #${i + 1})</div>`;
+      // 3. Item #N Header
+      itemDiv.innerHTML = `<div><strong>Item #${i + 1}</strong></div>`;
 
       // Limits description
       let limitDesc = `Max ${maxTotal} main flowers.`;
@@ -227,7 +233,7 @@ function getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
   let html = "";
   if (isEdit) {
     html += `
-            <strong>(${sz.size})</strong>
+            <div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>
             <div style="margin-top:8px;">
               <label style="font-size:14px;">Main Flowers</label>
               <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
@@ -263,7 +269,7 @@ function getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
               >${it.greeting || ""}</textarea>
             </div>`;
   } else {
-    html += `<strong>(${sz.size})</strong><br>
+    html += `<div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>
             Main Flowers: ${flowersStr}<br>
             Dominant Color: ${it.color}`;
     if (it.greeting) html += `<br><i>"${it.greeting}"</i>`;

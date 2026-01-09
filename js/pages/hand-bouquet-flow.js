@@ -3,7 +3,14 @@ function renderHandBouquetPage(currentProduct) {
   specDiv.innerHTML = "";
 
   currentProduct.sizes.forEach((sizeObj, sizeIdx) => {
+    // 1. Header outside
+    const sizeHeader = document.createElement("div");
+    sizeHeader.className = "order-item-header";
+    sizeHeader.innerText = `${productEmojis[currentProduct.type]} ${sizeObj.size} (Qty: ${sizeObj.quantity})`;
+    specDiv.appendChild(sizeHeader);
+
     for (let i = 0; i < sizeObj.quantity; i++) {
+        // 2. Item Container
       const itemDiv = document.createElement("div");
       itemDiv.className = "order-item";
 
@@ -16,9 +23,7 @@ function renderHandBouquetPage(currentProduct) {
         .join("");
 
       itemDiv.innerHTML = `
-            <div class="order-item-header">${currentProduct.type} - ${
-        sizeObj.size
-      } (Item #${i + 1})</div>
+            <div><strong>Item #${i + 1}</strong></div>
             
             <div class="form-group">
                 <label>Flower Color *</label>
@@ -127,7 +132,7 @@ function getHandBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
       .join("");
 
     html += `
-          <strong>(${sz.size})</strong>
+          <div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>
           <div style="margin-top:8px;">
             <label style="font-size:14px;">Flower Color</label>
             <input type="text" value="${it.color}" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
@@ -141,7 +146,7 @@ function getHandBouquetReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
             </select>
           </div>`;
   } else {
-    html += `<strong>(${sz.size})</strong><br>
+    html += `<div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>
           Flower Color: ${it.color}<br>
           Status: ${it.status}`;
   }
