@@ -288,7 +288,7 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
     const isOther = it.eventType === "Other";
 
     html += `
-          <strong>(${sz.size})</strong>
+          <div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>
           <div style="margin-top:8px;">
             <label style="font-size:14px;">Warna</label>
             <input type="text" value="${
@@ -329,7 +329,7 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
            </div>
           `;
   } else {
-    html += `<strong>(${sz.size})</strong><br>
+    html += `<div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>
           Warna: ${it.color}<br>
           Event: ${it.eventType === "Other" ? it.eventDetail : it.eventType}<br>
           Pax: ${it.pax}<br>
