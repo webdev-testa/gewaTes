@@ -134,6 +134,9 @@ async function initMap() {
                     lng: position.coords.longitude,
                 };
 
+                // Store globally
+                window.userLocation = pos;
+
                 // Update Map and Marker
                 map.setCenter(pos);
                 map.setZoom(17);
@@ -146,6 +149,10 @@ async function initMap() {
             }
         );
     }
+    
+    // Convert to global so valid inside refreshMap
+    window.mapInstance = map;
+    window.markerInstance = marker;
 }
 
 // Call initMap when the script loads
@@ -157,6 +164,13 @@ window.refreshMap = function() {
     setTimeout(() => {
         // Create a resize event
         window.dispatchEvent(new Event('resize'));
+
+        // If we have a user location and NO selected address yet, re-center
+        if (window.userLocation && !window.selectedMapAddress && window.mapInstance) {
+             window.mapInstance.setCenter(window.userLocation);
+             window.markerInstance.position = window.userLocation;
+             console.log("Recentering map to user location on refresh");
+        }
     }, 100);
 };
 
