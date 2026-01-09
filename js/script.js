@@ -63,6 +63,9 @@ function goToPage2() {
   // Reset class to default grid
   sizeOptionsDiv.className = "size-options";
   
+  // Set Theme
+  setTheme(productType);
+
   renderSizeOptionsHTML(sizeOptionsDiv, productType);
 
   // Intercept for Decoration Flow
@@ -72,6 +75,14 @@ function goToPage2() {
   }
 
   showPage(2);
+}
+
+function setTheme(type) {
+    if (type) {
+        document.body.setAttribute('data-theme', type);
+    } else {
+        document.body.removeAttribute('data-theme');
+    }
 }
 
 function changeQty(size, delta) {
@@ -704,6 +715,12 @@ function showPage(num) {
   }
 
   currentPage = num;
+  
+  // Theme reset for global pages
+  if (num === 1 || num === 5) {
+      setTheme(null); // Revert to brand default
+  }
+
   updateProgressBar(num);
   window.scrollTo(0, 0);
 }
