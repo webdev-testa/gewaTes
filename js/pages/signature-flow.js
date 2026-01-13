@@ -85,7 +85,8 @@ function renderYoonaInputs(item, sIdx, iIdx) {
 
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
-    <input type="file" accept="image/*" class="file-upload-label">
+    <input type="file" accept="image/*" class="file-upload-label"
+           onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
     <div style="font-size: 12px; color: #718096; margin-top: 4px;">
         Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
@@ -113,7 +114,8 @@ function renderBasketFlowInputs(item, sIdx, iIdx, sizeName) {
            oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
-        <input type="file" accept="image/*" class="file-upload-label">
+        <input type="file" accept="image/*" class="file-upload-label"
+               onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
         <div style="font-size: 12px; color: #718096; margin-top: 4px;">
             Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
         </div>
@@ -166,7 +168,8 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
            oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
-        <input type="file" accept="image/*" class="file-upload-label">
+        <input type="file" accept="image/*" class="file-upload-label"
+               onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
         <div style="font-size: 12px; color: #718096; margin-top: 4px;">
             Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
         </div>
@@ -214,7 +217,8 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
   // Upload Image
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
-    <input type="file" accept="image/*" class="file-upload-label">
+    <input type="file" accept="image/*" class="file-upload-label"
+           onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
     <div style="font-size: 12px; color: #718096; margin-top: 4px;">
         Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
@@ -270,7 +274,8 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
 
      <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Unggah Logo (Jika Ada)</label>
-      <input type="file" accept="image/*">
+      <input type="file" accept="image/*"
+             onchange="handleAcrylicLogoUpload(this, ${sIdx}, ${iIdx})">
        <div style="font-size: 12px; color: #718096; margin-top: 4px;">
           Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
        </div>
@@ -335,6 +340,45 @@ function updateAcrylicField(sIdx, iIdx, field, value) {
   const item = product.sizes[sIdx].items[iIdx];
   if (!item.acrylic) item.acrylic = {};
   item.acrylic[field] = value;
+}
+
+function handleSignatureImageUpload(input, sIdx, iIdx) {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("File is too large! Please choose an image under 2MB.");
+    input.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const product = orderData.selectedProducts[orderData.selectedProducts.length - 1];
+    const item = product.sizes[sIdx].items[iIdx];
+    item.referenceImage = e.target.result; // Base64 string
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleAcrylicLogoUpload(input, sIdx, iIdx) {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("File is too large! Please choose an image under 2MB.");
+    input.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const product = orderData.selectedProducts[orderData.selectedProducts.length - 1];
+    const item = product.sizes[sIdx].items[iIdx];
+    if (!item.acrylic) item.acrylic = {};
+    item.acrylic.logoImage = e.target.result; // Base64 string
+  };
+  reader.readAsDataURL(file);
 }
 
 // --- Validation ---
