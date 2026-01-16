@@ -775,55 +775,80 @@ function updateProgressBar(num) {
 }
 
 function prepareWhatsApp() {
+  // Date formatter for Indonesian locale
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
   // Order summary
-  let message = `New Order from ${orderData.customerName} (@${orderData.instagram})\n\n`;
+  let message = `Kak, aku atas nama ${orderData.customerName}, sudah order\n\n`;
   message += "Items:\n";
+
   orderData.selectedProducts.forEach((prod) => {
     prod.sizes.forEach((sz) => {
       sz.items.forEach((it, idx) => {
+        // Product Header
+        message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
+          sz.size
+        })\n`;
+
+        // Details
         if (prod.type === "vase") {
           const flowersStr = Object.entries(it.mainFlowers || {})
             .map(([k, v]) => `${k}: ${v}`)
             .join(", ");
-          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
-            sz.size
-          }) - Main Flowers: ${flowersStr} - Color: ${it.color}`;
+          message += `Main Flowers: ${flowersStr}\n`;
+          message += `Color: ${it.color}\n`;
         } else if (prod.type === "hand-bouquet") {
-          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
-            sz.size
-          }) - Status: ${it.status} - Color: ${it.color}`;
+          message += `Status: ${it.status}\n`;
+          message += `Color: ${it.color}\n`;
         } else if (prod.type === "decoration") {
           const ev = it.eventType === "Other" ? it.eventDetail : it.eventType;
-          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
-            sz.size
-          }) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
+          message += `Event: ${ev}\n`;
+          message += `Color: ${it.color}\n`;
+          message += `Guests: ${it.guestList}\n`;
         } else if (prod.type === "signature") {
-          let desc = "";
-          if (sz.size === "Yoona")
-            desc = `Main: ${it.mainFlower || "-"}, Color: ${it.color}`;
-          else if (sz.size === "Marii" || sz.size === "Bomi")
-            desc = `Color: ${it.color}, Basket: ${it.basketColor}`;
-          else if (sz.size === "Bloom box")
-            desc = `Color: ${it.color}, Wrap: ${it.wrapColor}`;
-          else if (sz.size === "Acrylic Bloom box")
-            desc = `Color: ${it.color}, Acrylic Details Included`;
-          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
-            sz.size
-          }) - ${desc}`;
+          if (sz.size === "Yoona") {
+            message += `Main: ${it.mainFlower || "-"}\nColor: ${it.color}\n`;
+          } else if (sz.size === "Marii" || sz.size === "Bomi") {
+            message += `Color: ${it.color}\nBasket: ${it.basketColor}\n`;
+          } else if (sz.size === "Bloom box") {
+            message += `Color: ${it.color}\nWrap: ${it.wrapColor}\n`;
+          } else if (sz.size === "Acrylic Bloom box") {
+            message += `Color: ${it.color}\nAcrylic Details Included\n`;
+          }
         } else {
-          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
-            sz.size
-          }) - Flower Color: ${it.color} - Wrap: ${it.wrapColor}`;
+          // Standard Bouquet
+          message += `Warna: ${it.color}\n`;
+          message += `Wrap: ${it.wrapColor}\n`;
         }
 
-        if (it.greeting) message += ` - Greeting: "${it.greeting}"`;
+        if (it.greeting) {
+          message += `Greeting: ${it.greeting}\n`;
+        }
         message += "\n";
       });
     });
-    // Add delivery info for this product
-    message += `Delivery: ${prod.delivery.date} at ${formatTime(
-      prod.delivery.time
-    )} to ${prod.delivery.address}\n`;
+
+    // Delivery Info
+    message += "Delivery:\n";
+    message += `📅 ${formatDate(prod.delivery.date)}\n`;
+    message += `⏰ ${formatTime(prod.delivery.time)}\n`;
+    message += `📍 ${prod.delivery.address}\n`;
+    if (prod.delivery.method && prod.delivery.method !== "-") {
+      message += `📦 Method: ${prod.delivery.method}\n`;
+    }
+
     message += "----------------\n";
   });
 
