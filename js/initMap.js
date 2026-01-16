@@ -115,15 +115,14 @@ async function initMap() {
     });
     // Expose reset function that has access to map/marker
     window.fullMapReset = function() {
-         window.selectedMapAddress = "";
-         input.value = "";
-         input.dispatchEvent(new Event('input'));
-         updateAddressDisplay();
-         
-         // Reset to default
-         map.setCenter(defaultLocation);
-         map.setZoom(13);
-         marker.position = defaultLocation;
+        window.selectedMapAddress = "";
+        input.value = "";
+        input.dispatchEvent(new Event('input'));
+        updateAddressDisplay();
+        // Reset to default
+        map.setCenter(defaultLocation);
+        map.setZoom(13);
+        marker.position = defaultLocation;
     };
 
     if (navigator.geolocation) {
@@ -167,9 +166,9 @@ window.refreshMap = function() {
 
         // If we have a user location and NO selected address yet, re-center
         if (window.userLocation && !window.selectedMapAddress && window.mapInstance) {
-             window.mapInstance.setCenter(window.userLocation);
-             window.markerInstance.position = window.userLocation;
-             console.log("Recentering map to user location on refresh");
+            window.mapInstance.setCenter(window.userLocation);
+            window.markerInstance.position = window.userLocation;
+            console.log("Recentering map to user location on refresh");
         }
     }, 100);
 };
@@ -195,7 +194,7 @@ function updateAddressDisplay() {
     if (decVenueAddress) {
         // Only update if it's empty or the user just picked a map location
         if (decVenueAddress.offsetParent !== null) { // Checks if visible
-             decVenueAddress.value = address;
+            decVenueAddress.value = address;
         }
     }
 }
@@ -259,7 +258,7 @@ window.clearSearchBox = function() {
 window.resetMap = function() {
     if (window.fullMapReset) {
          window.fullMapReset(); // Use the powerful one if available (inside initMap scope)
-         return;
+        return;
     }
     
     // Fallback if fullMapReset isn't ready

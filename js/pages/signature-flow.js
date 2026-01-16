@@ -67,7 +67,7 @@ function renderYoonaInputs(item, sIdx, iIdx) {
     // Note: We use onclick attribute to call global update function
     html += `
       <div class="flower-choice-card ${isSelected}" 
-           onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'mainFlower', '${f.name}')">
+          onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'mainFlower', '${f.name}')">
         <img src="${f.image}" alt="${f.name}" class="flower-choice-img">
         <div>${f.name}</div>
       </div>
@@ -79,14 +79,14 @@ function renderYoonaInputs(item, sIdx, iIdx) {
   html += `<div class="form-group">
     <label>Color Nuance *</label>
     <input type="text" placeholder="e.g. Pink Pastel" 
-           value="${item.color || ''}" 
-           oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
+          value="${item.color || ''}" 
+          oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
   </div>`;
 
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label"
-           onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
+          onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
     <div style="font-size: 12px; color: #718096; margin-top: 4px;">
         Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
@@ -110,12 +110,12 @@ function renderBasketFlowInputs(item, sIdx, iIdx, sizeName) {
   let html = `<div class="form-group">
     <label>Flower Color *</label>
     <input type="text" placeholder="e.g. Red and White" 
-           value="${item.color || ''}" 
-           oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
+          value="${item.color || ''}" 
+          oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
         <input type="file" accept="image/*" class="file-upload-label"
-               onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
+              onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
         <div style="font-size: 12px; color: #718096; margin-top: 4px;">
             Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
         </div>
@@ -164,12 +164,12 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
   let html = `<div class="form-group">
     <label>Flower Color *</label>
     <input type="text" placeholder="e.g. Red and White" 
-           value="${item.color || ''}" 
-           oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
+          value="${item.color || ''}" 
+          oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
     <div style="margin-top: 8px;">
         <label>Upload Reference Photo (Optional)</label>
         <input type="file" accept="image/*" class="file-upload-label"
-               onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
+              onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
         <div style="font-size: 12px; color: #718096; margin-top: 4px;">
             Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
         </div>
@@ -182,8 +182,8 @@ function renderBloomBoxInputs(item, sIdx, iIdx) {
     <div class="color-options">`;
   
   wrapOptions.forEach(opt => {
-     const isSelected = item.wrapColor === opt ? "selected" : "";
-     html += `<button class="color-btn ${isSelected}" data-wrap-color="${opt}"
+    const isSelected = item.wrapColor === opt ? "selected" : "";
+    html += `<button class="color-btn ${isSelected}" data-wrap-color="${opt}"
           onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
   });
   
@@ -210,15 +210,15 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
   let html = `<div class="form-group">
     <label>Flower Color *</label>
     <input type="text" placeholder="e.g. Red and White" 
-           value="${item.color || ''}" 
-           oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
+          value="${item.color || ''}" 
+          oninput="updateSignatureItem(${sIdx}, ${iIdx}, 'color', this.value)">
   </div>`;
 
   // Upload Image
   html += `<div class="form-group">
     <label>Upload Reference Photo (Optional)</label>
     <input type="file" accept="image/*" class="file-upload-label"
-           onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
+          onchange="handleSignatureImageUpload(this, ${sIdx}, ${iIdx})">
     <div style="font-size: 12px; color: #718096; margin-top: 4px;">
         Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
     </div>
@@ -230,8 +230,8 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
     <div class="color-options">`;
   
   wrapOptions.forEach(opt => {
-     const isSelected = item.wrapColor === opt ? "selected" : "";
-     html += `<button class="color-btn ${isSelected}" data-wrap-color="${opt}"
+    const isSelected = item.wrapColor === opt ? "selected" : "";
+    html += `<button class="color-btn ${isSelected}" data-wrap-color="${opt}"
           onclick="updateSignatureItem(${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
   });
   
@@ -247,38 +247,38 @@ function renderAcrylicInputs(item, sIdx, iIdx) {
     <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Header (Contoh: Selamat dan Sukses)</label>
       <input type="text" value="${item.acrylic.header || ''}" 
-             placeholder="Selamat dan Sukses"
-             oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'header', this.value)">
+            placeholder="Selamat dan Sukses"
+            oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'header', this.value)">
     </div>
 
     <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Event (Contoh: Grand Opening Store)</label>
       <input type="text" value="${item.acrylic.event || ''}" 
-             placeholder="Grand Opening..."
-             oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'event', this.value)">
+            placeholder="Grand Opening..."
+            oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'event', this.value)">
     </div>
 
     <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Nama/Logo Penerima</label>
       <input type="text" value="${item.acrylic.receiver || ''}" 
-             placeholder="Toko Bunga ABC"
-             oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'receiver', this.value)">
+            placeholder="Toko Bunga ABC"
+            oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'receiver', this.value)">
     </div>
 
     <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Nama Pemberi (Dari)</label>
       <input type="text" value="${item.acrylic.sender || ''}" 
-             placeholder="Budi & Keluarga"
-             oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'sender', this.value)">
+            placeholder="Budi & Keluarga"
+            oninput="updateAcrylicField(${sIdx}, ${iIdx}, 'sender', this.value)">
     </div>
 
-     <div style="margin-bottom: 12px;">
+    <div style="margin-bottom: 12px;">
       <label style="font-weight:normal; font-size:14px;">Unggah Logo (Jika Ada)</label>
       <input type="file" accept="image/*"
-             onchange="handleAcrylicLogoUpload(this, ${sIdx}, ${iIdx})">
-       <div style="font-size: 12px; color: #718096; margin-top: 4px;">
+            onchange="handleAcrylicLogoUpload(this, ${sIdx}, ${iIdx})">
+      <div style="font-size: 12px; color: #718096; margin-top: 4px;">
           Max size 2MB. Need to compress? <a href="https://www.iloveimg.com/compress-image" target="_blank" style="text-decoration: underline; color: #718096;">Click here</a>
-       </div>
+      </div>
     </div>
 
   </div>`;
@@ -397,8 +397,8 @@ function validateAndSaveSignatureOrder(product) {
       } else if (sName === "Bloom box") {
         if (!item.wrapColor || !item.color) isValid = false;
       } else if (sName === "Acrylic Bloom box") {
-         // Added wrapColor validation
-         if (!item.color || !item.wrapColor) isValid = false;
+        // Added wrapColor validation
+        if (!item.color || !item.wrapColor) isValid = false;
       }
     });
   });
@@ -438,9 +438,9 @@ function getSignatureReviewHTML(item, size, isEdit, pIdx, sIdx, iIdx) {
         html += `<div>Basket Color: ${item.basketColor || '-'}</div>`;
         if (item.greeting) html += `<div>Card: "${item.greeting}"</div>`;
       } else if (sName === "Bloom box") {
-         html += `<div>Flower Color: ${item.color || '-'}</div>`;
-         html += `<div>Wrap Color: ${item.wrapColor || '-'}</div>`;
-         if (item.greeting) html += `<div>Card: "${item.greeting}"</div>`;
+        html += `<div>Flower Color: ${item.color || '-'}</div>`;
+        html += `<div>Wrap Color: ${item.wrapColor || '-'}</div>`;
+        if (item.greeting) html += `<div>Card: "${item.greeting}"</div>`;
       } else if (sName === "Acrylic Bloom box") {
         html += `<div>Color: ${item.color || '-'}</div>`;
         html += `<div>Wrap Color: ${item.wrapColor || '-'}</div>`;
@@ -490,8 +490,8 @@ function renderBloomBoxReviewInputs(item, pIdx, sIdx, iIdx) {
   let html = `<div class="form-group"><label>Flower Color</label><input type="text" value="${item.color || ''}" oninput="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'color', this.value)"></div>`;
   html += `<div class="form-group"><label>Box/Wrap Color</label><div class="color-options">`;
   wrapOptions.forEach(opt => {
-     const isSelected = item.wrapColor === opt ? "selected" : "";
-     html += `<button class="color-btn ${isSelected}" onclick="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
+    const isSelected = item.wrapColor === opt ? "selected" : "";
+    html += `<button class="color-btn ${isSelected}" onclick="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
   });
   html += `</div></div>`;
   html += `<div class="form-group"><label>Greeting Card</label><textarea rows="2" oninput="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'greeting', this.value)">${item.greeting || ''}</textarea></div>`;
@@ -504,8 +504,8 @@ function renderAcrylicReviewInputs(item, pIdx, sIdx, iIdx) {
   
   html += `<div class="form-group"><label>Box/Wrap Color</label><div class="color-options">`;
   wrapOptions.forEach(opt => {
-     const isSelected = item.wrapColor === opt ? "selected" : "";
-     html += `<button class="color-btn ${isSelected}" onclick="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
+    const isSelected = item.wrapColor === opt ? "selected" : "";
+    html += `<button class="color-btn ${isSelected}" onclick="updateSignatureReviewItem(${pIdx}, ${sIdx}, ${iIdx}, 'wrapColor', '${opt}')">${opt}</button>`;
   });
   html += `</div></div>`;
 

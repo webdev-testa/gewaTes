@@ -35,14 +35,14 @@ function renderDecorationPage2() {
           placeholder="List names here (separated by enter or comma)..." 
           onblur="cleanGuestListInput(this)" 
           oninput="updateGuestCounter(this)"></textarea>
-         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px;">
-             <div id="pax-mismatch-warning" style="font-size: 13px; color: #e53e3e; display:none; flex: 1; padding-right: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px;">
+            <div id="pax-mismatch-warning" style="font-size: 13px; color: #e53e3e; display:none; flex: 1; padding-right: 8px;">
                 ⚠️ Mismatch: List has <span id="list-count-val">0</span> names but Pax is <span id="pax-val">0</span>.
-             </div>
-             <div id="guest-list-counter" style="font-size: 13px; color: #2d3748; font-weight: 600; white-space: nowrap;">
+            </div>
+            <div id="guest-list-counter" style="font-size: 13px; color: #2d3748; font-weight: 600; white-space: nowrap;">
                 ✅ 0 names detected
-             </div>
-         </div>
+            </div>
+        </div>
     </div>
   `;
   sizeOptionsDiv.appendChild(container);
@@ -78,12 +78,12 @@ function updateGuestCounter(textarea) {
     const counterEl = document.getElementById("guest-list-counter");
     if (counterEl) {
         if (count > 0) {
-           // Always visible if > 0 to match user request context usually,
-           // or we can hide if 0. Structure above assumes it might be hidden initially.
-           counterEl.style.display = "block";
-           counterEl.innerText = `✅ ${count} name${count !== 1 ? 's' : ''} detected`;
+          // Always visible if > 0 to match user request context usually,
+          // or we can hide if 0. Structure above assumes it might be hidden initially.
+          counterEl.style.display = "block";
+          counterEl.innerText = `✅ ${count} name${count !== 1 ? 's' : ''} detected`;
         } else {
-           counterEl.style.display = "none";
+          counterEl.style.display = "none";
         }
     }
     
@@ -129,11 +129,11 @@ function changeDecorationPax(delta) {
 }
 
 function manualDecorationPaxChange(val) {
-   const display = document.getElementById("dec-pax-display");
-   let v = parseInt(val) || 0;
-   v = Math.max(0, v);
-   display.value = v;
-   checkPaxMismatch();
+  const display = document.getElementById("dec-pax-display");
+  let v = parseInt(val) || 0;
+  v = Math.max(0, v);
+  display.value = v;
+  checkPaxMismatch();
 }
 
 function handleDecorationPage2Next(currentProduct) {
@@ -298,9 +298,9 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
           </div>
             <label style="font-size:14px;">Pax</label>
             <input type="number" value="${it.pax}" 
-                   style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                   oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'pax', this.value)"
-                   onfocus="this.select()">
+                  style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
+                  oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'pax', this.value)"
+                  onfocus="this.select()">
           </div>
           <div style="margin-top:8px;">
             <label style="font-size:14px;">List Nama Tamu</label>
@@ -310,23 +310,23 @@ function getDecorationReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
     }</textarea>
           </div>
           <div style="margin-top:8px;">
-             <label style="font-size:14px;">Event Type</label>
-             <select style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
+            <label style="font-size:14px;">Event Type</label>
+            <select style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
                 id="rev-event-${pIdx}-${sIdx}-${iIdx}"
                 onchange="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'eventType', this.value); toggleReviewDecorationOther(${pIdx}, ${sIdx}, ${iIdx});">
                 ${evOpts}
             </select>
           </div>
-           <div style="margin-top:8px; display:${
-             isOther ? "block" : "none"
-           };" id="rev-other-container-${pIdx}-${sIdx}-${iIdx}">
+          <div style="margin-top:8px; display:${
+            isOther ? "block" : "none"
+          };" id="rev-other-container-${pIdx}-${sIdx}-${iIdx}">
               <label style="font-size:14px;">Other Detail</label>
               <input type="text" value="${
                 it.eventDetail === "Other" ? "" : it.eventDetail
               }" 
-                 style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
-                 oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'eventDetail', this.value)">
-           </div>
+                style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:4px;"
+                oninput="updateItemData(${pIdx}, ${sIdx}, ${iIdx}, 'eventDetail', this.value)">
+          </div>
           `;
   } else {
     html += `<div style="font-weight:bold; margin-bottom:4px;">${sz.size}</div>

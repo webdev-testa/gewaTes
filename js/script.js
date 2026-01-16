@@ -308,7 +308,7 @@ function toggleSameDelivery() {
             document.getElementById("decVenueFloor").value = parsed.floor || "";
             document.getElementById("decVenueRoom").value = parsed.room || "";
         } catch(e) {
-             document.getElementById("decVenueAddress").value = addr;
+            document.getElementById("decVenueAddress").value = addr;
         }
     } else {
         // Standard flow
@@ -367,8 +367,8 @@ function goToPage5() {
       const vRoom = document.getElementById("decVenueRoom").value.trim();
       
       if (!vName || !vAddr) { // Floor and Room strictly required? Maybe just warnings or assume required based on 'Alamat Venue *' label implies structure
-           alert("Please fill in Venue Name and Address.");
-           return;
+          alert("Please fill in Venue Name and Address.");
+          return;
       }
       
       // Store as JSON
@@ -593,15 +593,15 @@ function renderProductBlock(prod, pIdx) {
           try { addrObj = JSON.parse(prod.delivery.address); } catch(e){}
           
           html += `
-           <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
+          <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
             <label>📍 Alamat Venue</label>
             <input type="text" placeholder="Nama Venue" value="${addrObj.venue}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'venue', this.value)">
             <input type="text" placeholder="Alamat" value="${addrObj.address}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'address', this.value)">
             <input type="text" placeholder="Lantai" value="${addrObj.floor}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'floor', this.value)">
             <input type="text" placeholder="Ruangan" value="${addrObj.room}" style="width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'room', this.value)">
-           </div>`;
+          </div>`;
       } else {
-         html += `
+        html += `
           <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
             <label>Address</label>
             <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value)">${prod.delivery.address}</textarea>
@@ -754,12 +754,12 @@ function prepareWhatsApp() {
           }) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
 
         } else if (prod.type === "signature") {
-           let desc = "";
-           if (sz.size === "Yoona") desc = `Main: ${it.mainFlower || '-'}, Color: ${it.color}`;
-           else if (sz.size === "Marii" || sz.size === "Bomi") desc = `Color: ${it.color}, Basket: ${it.basketColor}`;
-           else if (sz.size === "Bloom box") desc = `Color: ${it.color}, Wrap: ${it.wrapColor}`;
-           else if (sz.size === "Acrylic Bloom box") desc = `Color: ${it.color}, Acrylic Details Included`;
-           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - ${desc}`;
+          let desc = "";
+          if (sz.size === "Yoona") desc = `Main: ${it.mainFlower || '-'}, Color: ${it.color}`;
+          else if (sz.size === "Marii" || sz.size === "Bomi") desc = `Color: ${it.color}, Basket: ${it.basketColor}`;
+          else if (sz.size === "Bloom box") desc = `Color: ${it.color}, Wrap: ${it.wrapColor}`;
+          else if (sz.size === "Acrylic Bloom box") desc = `Color: ${it.color}, Acrylic Details Included`;
+          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - ${desc}`;
         } else {
           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
             sz.size

@@ -238,11 +238,10 @@ function getVaseReviewHTML(it, sz, isEdit, pIdx, sIdx, iIdx) {
               <label style="font-size:14px;">Main Flowers</label>
               <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
               ${vaseFlowers.map(f => {
-                   const limits = vaseLimits[sz.size];
-                   if (f === "Hydrangea" && !limits.allowHydrangea) return '';
-                   
-                   const currentQty = it.mainFlowers[f] || 0;
-                   return `
+                  const limits = vaseLimits[sz.size];
+                  if (f === "Hydrangea" && !limits.allowHydrangea) return '';
+                  const currentQty = it.mainFlowers[f] || 0;
+                  return `
                     <div class="size-item" style="padding: 4px; border:1px solid #e2e8f0;">
                         <div class="size-info"><div class="size-name" style="font-size:14px;">${f}</div></div>
                         <div class="quantity-control">
@@ -317,8 +316,8 @@ function updateVaseReviewQty(pIdx, sIdx, iIdx, flower, delta) {
 
   if (delta > 0) {
       if (totalCount >= limits.maxTotal) {
-           alert(`Max total ${limits.maxTotal} flowers allowed.`);
-           return;
+          alert(`Max total ${limits.maxTotal} flowers allowed.`);
+          return;
       }
       if (newVal > limits.maxPerType) {
           alert(`Max ${limits.maxPerType} of ${flower} allowed.`);
