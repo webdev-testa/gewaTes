@@ -890,11 +890,11 @@ function prepareWhatsApp() {
 
     // Delivery Info
     message += "Delivery:\n";
-    message += `📅 ${formatDate(prod.delivery.date)}\n`;
-    message += `⏰ ${formatTime(prod.delivery.time)}\n`;
-    message += `📍 ${prod.delivery.address}\n`;
+    message += `\u{1F4C5} ${formatDate(prod.delivery.date)}\n`;
+    message += `\u{23F0} ${formatTime(prod.delivery.time)}\n`;
+    message += `\u{1F4CD} ${prod.delivery.address}\n`;
     if (prod.delivery.method && prod.delivery.method !== "-") {
-      message += `📦 Method: ${prod.delivery.method}\n`;
+      message += `\u{1F4E6} Method: ${prod.delivery.method}\n`;
     }
 
     message += "----------------\n";
