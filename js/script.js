@@ -62,7 +62,7 @@ function goToPage2() {
   const sizeOptionsDiv = document.getElementById("sizeOptions");
   // Reset class to default grid
   sizeOptionsDiv.className = "size-options";
-  
+
   // Set Theme
   setTheme(productType);
 
@@ -78,11 +78,11 @@ function goToPage2() {
 }
 
 function setTheme(type) {
-    if (type) {
-        document.body.setAttribute('data-theme', type);
-    } else {
-        document.body.removeAttribute('data-theme');
-    }
+  if (type) {
+    document.body.setAttribute("data-theme", type);
+  } else {
+    document.body.removeAttribute("data-theme");
+  }
 }
 
 function changeQty(size, delta) {
@@ -105,7 +105,6 @@ function goToPage3() {
   const sizes = productSizes[currentProduct.type];
 
   currentProduct.sizes = [];
-
 
   sizes.forEach((size) => {
     const qtyEl = document.getElementById(`qty-${size}`);
@@ -180,7 +179,9 @@ function goToPage4() {
   } else if (currentProduct.type === "signature") {
     allValid = validateAndSaveSignatureOrder(currentProduct);
     if (!allValid) {
-      alert("Please complete all required fields (Flower/Basket/Color) for your Signature items.");
+      alert(
+        "Please complete all required fields (Flower/Basket/Color) for your Signature items."
+      );
       return;
     }
   } else {
@@ -198,15 +199,20 @@ function goToPage4() {
 
   // Set min date to today for native date input
   const dateInput = document.getElementById("deliveryDate");
-  const today = new Date().toISOString().split('T')[0];
-  dateInput.setAttribute('min', today);
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.setAttribute("min", today);
 
   // Set Info Text
   const infoEl = document.getElementById("deliveryDateInfo");
-  if (currentProduct.type === "hand-bouquet" || currentProduct.type === "decoration") {
-      infoEl.innerText = "Pre Order H-7. Jika kurang dari itu (maksimal H-5) dikenakan additional service fee IDR 35K/hari. Harap konfirmasi kestersediaan dengan admin By Gewa.";
+  if (
+    currentProduct.type === "hand-bouquet" ||
+    currentProduct.type === "decoration"
+  ) {
+    infoEl.innerText =
+      "Pre Order H-7. Jika kurang dari itu (maksimal H-5) dikenakan additional service fee IDR 35K/hari. Harap konfirmasi kestersediaan dengan admin By Gewa.";
   } else {
-      infoEl.innerText = "Pre Order H-3. Jika kurang dari itu, diharap konfirmasi kestersediaan dengan admin By Gewa.";
+    infoEl.innerText =
+      "Pre Order H-3. Jika kurang dari itu, diharap konfirmasi kestersediaan dengan admin By Gewa.";
   }
 
   // Check if this is the 2nd+ product
@@ -219,40 +225,42 @@ function goToPage4() {
     currentProduct.delivery?.date || "";
   document.getElementById("deliveryTime").value =
     currentProduct.delivery?.time || "";
-  
+
   // Handle Address Fields
   const stdAddrGroup = document.getElementById("std-address-group");
   const decAddrGroup = document.getElementById("decorationDeliveryFields");
-  
+
   if (currentProduct.type === "decoration") {
-      stdAddrGroup.style.display = "none";
-      decAddrGroup.style.display = "block";
-      
-      // Try to parse existing address if it exists
-      let venue="", vAddr="", vFloor="", vRoom="";
-      try {
-          if (currentProduct.delivery?.address) {
-              const parsed = JSON.parse(currentProduct.delivery.address);
-              venue = parsed.venue || "";
-              vAddr = parsed.address || "";
-              vFloor = parsed.floor || "";
-              vRoom = parsed.room || "";
-          }
-      } catch (e) {
-          // Fallback if not JSON (legacy or error)
-          venue = currentProduct.delivery?.address || "";
+    stdAddrGroup.style.display = "none";
+    decAddrGroup.style.display = "block";
+
+    // Try to parse existing address if it exists
+    let venue = "",
+      vAddr = "",
+      vFloor = "",
+      vRoom = "";
+    try {
+      if (currentProduct.delivery?.address) {
+        const parsed = JSON.parse(currentProduct.delivery.address);
+        venue = parsed.venue || "";
+        vAddr = parsed.address || "";
+        vFloor = parsed.floor || "";
+        vRoom = parsed.room || "";
       }
-      
-      document.getElementById("decVenueName").value = venue;
-      document.getElementById("decVenueAddress").value = vAddr;
-      document.getElementById("decVenueFloor").value = vFloor;
-      document.getElementById("decVenueRoom").value = vRoom;
-      
+    } catch (e) {
+      // Fallback if not JSON (legacy or error)
+      venue = currentProduct.delivery?.address || "";
+    }
+
+    document.getElementById("decVenueName").value = venue;
+    document.getElementById("decVenueAddress").value = vAddr;
+    document.getElementById("decVenueFloor").value = vFloor;
+    document.getElementById("decVenueRoom").value = vRoom;
   } else {
-      stdAddrGroup.style.display = "block";
-      decAddrGroup.style.display = "none";
-      document.getElementById("deliveryAddress").value =
-        currentProduct.delivery?.address || "";
+    stdAddrGroup.style.display = "block";
+    decAddrGroup.style.display = "none";
+    document.getElementById("deliveryAddress").value =
+      currentProduct.delivery?.address || "";
   }
 
   if (!isFirstProduct) {
@@ -261,21 +269,32 @@ function goToPage4() {
     toggleInputState(false); // Enable inputs
     const addr = currentProduct.delivery?.address;
     if (!addr && window.resetMap) {
-        window.resetMap();
+      window.resetMap();
     }
-    
   } else {
     sameDeliveryGroup.style.display = "none";
     toggleInputState(false);
     if (!currentProduct.delivery?.address && window.resetMap) {
-        window.resetMap();
+      window.resetMap();
     }
   }
 
   showPage(4);
-  
+
   if (window.refreshMap) {
-      window.refreshMap();
+    window.refreshMap();
+  }
+
+  // Initial render of delivery options if address exists
+  // For standard flow (not decoration)
+  if (currentProduct.type !== "decoration") {
+    const addr = currentProduct.delivery?.address;
+    if (addr) {
+      renderDeliveryOptions(addr);
+    } else {
+      // Ensure hidden if no address
+      renderDeliveryOptions("");
+    }
   }
 }
 
@@ -283,8 +302,9 @@ function toggleSameDelivery() {
   const checkbox = document.getElementById("sameDelivery");
   const isChecked = checkbox.checked;
   const firstProd = orderData.selectedProducts[0];
-  
-  const currentProduct = orderData.selectedProducts[orderData.selectedProducts.length - 1];
+
+  const currentProduct =
+    orderData.selectedProducts[orderData.selectedProducts.length - 1];
   const manualToggle = document.getElementById("manualAddressToggle");
   const manualInput = document.getElementById("deliveryAddress");
 
@@ -292,49 +312,48 @@ function toggleSameDelivery() {
     // Fill values
     document.getElementById("deliveryDate").value = firstProd.delivery.date;
     document.getElementById("deliveryTime").value = firstProd.delivery.time;
-    
+
     // Disable Date/Time interactions
     toggleInputState(true);
 
     const addr = firstProd.delivery.address;
-    
+
     // For Decoration flow, we might need to parse, but usually we just fill the fields
     if (currentProduct.type === "decoration") {
-        // Re-use logic to fill venue fields
-        try {
-            const parsed = JSON.parse(addr);
-            document.getElementById("decVenueName").value = parsed.venue || "";
-            document.getElementById("decVenueAddress").value = parsed.address || "";
-            document.getElementById("decVenueFloor").value = parsed.floor || "";
-            document.getElementById("decVenueRoom").value = parsed.room || "";
-        } catch(e) {
-            document.getElementById("decVenueAddress").value = addr;
-        }
+      // Re-use logic to fill venue fields
+      try {
+        const parsed = JSON.parse(addr);
+        document.getElementById("decVenueName").value = parsed.venue || "";
+        document.getElementById("decVenueAddress").value = parsed.address || "";
+        document.getElementById("decVenueFloor").value = parsed.floor || "";
+        document.getElementById("decVenueRoom").value = parsed.room || "";
+      } catch (e) {
+        document.getElementById("decVenueAddress").value = addr;
+      }
     } else {
-        // Standard flow
-        document.getElementById("deliveryAddress").value = addr;
-        
-        // Auto-check "I want to correct manualy" so the textarea is shown
-        if (manualToggle) {
-            manualToggle.checked = true;
-            // We need to trigger the UI update that toggleManualAddress does
-            if (window.toggleManualAddress) {
-                window.toggleManualAddress(); 
-            } else {
-                // Fallback if function not accessible (though it should be)
-                if (manualInput) manualInput.style.display = "block";
-                const displayEl = document.getElementById("selectedAddressDisplay");
-                if (displayEl) displayEl.style.display = "none";
-            }
+      // Standard flow
+      document.getElementById("deliveryAddress").value = addr;
+
+      // Auto-check "I want to correct manualy" so the textarea is shown
+      if (manualToggle) {
+        manualToggle.checked = true;
+        // We need to trigger the UI update that toggleManualAddress does
+        if (window.toggleManualAddress) {
+          window.toggleManualAddress();
+        } else {
+          // Fallback if function not accessible (though it should be)
+          if (manualInput) manualInput.style.display = "block";
+          const displayEl = document.getElementById("selectedAddressDisplay");
+          if (displayEl) displayEl.style.display = "none";
         }
+      }
     }
-    
   } else {
     toggleInputState(false);
-    
+
     if (manualToggle) {
-        manualToggle.checked = false;
-        if (window.toggleManualAddress) window.toggleManualAddress();
+      manualToggle.checked = false;
+      if (window.toggleManualAddress) window.toggleManualAddress();
     }
   }
 }
@@ -354,40 +373,41 @@ function toggleInputState(disabled) {
 function goToPage5() {
   const dDate = document.getElementById("deliveryDate").value;
   const dTime = document.getElementById("deliveryTime").value;
-  
+
   // Address Handling
   let dAddr = "";
   const currentProd =
     orderData.selectedProducts[orderData.selectedProducts.length - 1];
 
   if (currentProd.type === "decoration") {
-      const vName = document.getElementById("decVenueName").value.trim();
-      const vAddr = document.getElementById("decVenueAddress").value.trim();
-      const vFloor = document.getElementById("decVenueFloor").value.trim();
-      const vRoom = document.getElementById("decVenueRoom").value.trim();
-      
-      if (!vName || !vAddr) { // Floor and Room strictly required? Maybe just warnings or assume required based on 'Alamat Venue *' label implies structure
-          alert("Please fill in Venue Name and Address.");
-          return;
-      }
-      
-      // Store as JSON
-      dAddr = JSON.stringify({
-          venue: vName,
-          address: vAddr,
-          floor: vFloor,
-          room: vRoom
-      });
+    const vName = document.getElementById("decVenueName").value.trim();
+    const vAddr = document.getElementById("decVenueAddress").value.trim();
+    const vFloor = document.getElementById("decVenueFloor").value.trim();
+    const vRoom = document.getElementById("decVenueRoom").value.trim();
+
+    if (!vName || !vAddr) {
+      // Floor and Room strictly required? Maybe just warnings or assume required based on 'Alamat Venue *' label implies structure
+      alert("Please fill in Venue Name and Address.");
+      return;
+    }
+
+    // Store as JSON
+    dAddr = JSON.stringify({
+      venue: vName,
+      address: vAddr,
+      floor: vFloor,
+      room: vRoom,
+    });
   } else {
-      if (window.getFinalDeliveryAddress) {
-          dAddr = window.getFinalDeliveryAddress();
-      } else {
-          dAddr = document.getElementById("deliveryAddress").value.trim();
-      }
-      if (!dAddr) {
-        alert("Please fill in Delivery Address.");
-        return;
-      }
+    if (window.getFinalDeliveryAddress) {
+      dAddr = window.getFinalDeliveryAddress();
+    } else {
+      dAddr = document.getElementById("deliveryAddress").value.trim();
+    }
+    if (!dAddr) {
+      alert("Please fill in Delivery Address.");
+      return;
+    }
   }
 
   if (!dDate || !dTime) {
@@ -399,10 +419,26 @@ function goToPage5() {
   const currentProduct =
     orderData.selectedProducts[orderData.selectedProducts.length - 1];
 
+  // Validate Delivery Option if visible
+  const delOptionsWrapper = document.getElementById("deliveryOptionsWrapper");
+  let selectedMethod = "";
+
+  if (delOptionsWrapper && delOptionsWrapper.style.display !== "none") {
+    const selectedRadio = document.querySelector(
+      'input[name="deliveryMethod"]:checked'
+    );
+    if (!selectedRadio) {
+      alert("Please select a Delivery Method.");
+      return;
+    }
+    selectedMethod = selectedRadio.value;
+  }
+
   currentProduct.delivery = {
     date: dDate,
     time: dTime,
     address: dAddr,
+    method: selectedMethod,
   };
 
   // Show additional products
@@ -425,14 +461,16 @@ function goToPage5() {
     available.forEach((prod) => {
       const card = document.createElement("div");
       card.className = "product-card";
-      card.innerHTML = `<div class="product-img"><img src="${productImages[prod]}" alt="${prod}"></div><div>${formatName(prod)}</div>`;
+      card.innerHTML = `<div class="product-img"><img src="${
+        productImages[prod]
+      }" alt="${prod}"></div><div>${formatName(prod)}</div>`;
       card.onclick = function () {
         orderData.selectedProducts.push({ type: prod, sizes: [] });
-        
+
         // Intercept for Decoration Flow
         if (prod === "decoration") {
-            renderDecorationPage2();
-            return;
+          renderDecorationPage2();
+          return;
         }
 
         // Re-trigger page 2 setup manually
@@ -447,22 +485,22 @@ function goToPage5() {
 }
 
 function renderSizeOptionsHTML(container, type) {
-    container.innerHTML = "";
-    const sizes = productSizes[type];
-    
-    sizes.forEach((size) => {
-        const imgSrc = getSizeImage(type, size);
-        const sizeDiv = document.createElement("div");
-        sizeDiv.className = "size-item";
-        sizeDiv.innerHTML = `
+  container.innerHTML = "";
+  const sizes = productSizes[type];
+
+  sizes.forEach((size) => {
+    const imgSrc = getSizeImage(type, size);
+    const sizeDiv = document.createElement("div");
+    sizeDiv.className = "size-item";
+    sizeDiv.innerHTML = `
           <div class="size-img"><img src="${imgSrc}" alt="${size}"></div>
           <div class="quantity-control">
             <button class="qty-btn" onclick="changeQty('${size}', -1)">−</button>
             <input type="number" class="qty-input" id="qty-${size}" value="0" min="0" onchange="manualQtyChange('${size}', this.value)" onfocus="this.select()">
             <button class="qty-btn" onclick="changeQty('${size}', 1)">+</button>
           </div>`;
-        container.appendChild(sizeDiv);
-    });
+    container.appendChild(sizeDiv);
+  });
 }
 
 function formatName(str) {
@@ -581,18 +619,26 @@ function renderProductBlock(prod, pIdx) {
     html += `
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Date</label>
-        <input type="date" class="review-date-input" data-pidx="${pIdx}" value="${prod.delivery.date}" onchange="updateProductDelivery(${pIdx}, 'date', this.value)" min="${new Date().toISOString().split('T')[0]}">
+        <input type="date" class="review-date-input" data-pidx="${pIdx}" value="${
+      prod.delivery.date
+    }" onchange="updateProductDelivery(${pIdx}, 'date', this.value)" min="${
+      new Date().toISOString().split("T")[0]
+    }">
       </div>
       <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
         <label>Time</label>
-        <input type="time" value="${prod.delivery.time}" step="60" onchange="updateProductDelivery(${pIdx}, 'time', this.value)">
+        <input type="time" value="${
+          prod.delivery.time
+        }" step="60" onchange="updateProductDelivery(${pIdx}, 'time', this.value)">
       </div>`;
-      
-      if (prod.type === "decoration") {
-          let addrObj = {venue:"", address:"", floor:"", room:""};
-          try { addrObj = JSON.parse(prod.delivery.address); } catch(e){}
-          
-          html += `
+
+    if (prod.type === "decoration") {
+      let addrObj = { venue: "", address: "", floor: "", room: "" };
+      try {
+        addrObj = JSON.parse(prod.delivery.address);
+      } catch (e) {}
+
+      html += `
           <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
             <label>📍 Alamat Venue</label>
             <input type="text" placeholder="Nama Venue" value="${addrObj.venue}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'venue', this.value)">
@@ -600,23 +646,22 @@ function renderProductBlock(prod, pIdx) {
             <input type="text" placeholder="Lantai" value="${addrObj.floor}" style="margin-bottom:4px; width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'floor', this.value)">
             <input type="text" placeholder="Ruangan" value="${addrObj.room}" style="width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'room', this.value)">
           </div>`;
-      } else {
-        html += `
+    } else {
+      html += `
           <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
             <label>Address</label>
             <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value)">${prod.delivery.address}</textarea>
           </div>`;
-      }
-      
+    }
   } else {
     let displayAddr = prod.delivery.address;
     if (prod.type === "decoration") {
-        try {
-            const parsed = JSON.parse(displayAddr);
-            displayAddr = `<strong>${parsed.venue}</strong><br>${parsed.address}<br>Lantai: ${parsed.floor}, Ruangan: ${parsed.room}`;
-        } catch(e) {}
+      try {
+        const parsed = JSON.parse(displayAddr);
+        displayAddr = `<strong>${parsed.venue}</strong><br>${parsed.address}<br>Lantai: ${parsed.floor}, Ruangan: ${parsed.room}`;
+      } catch (e) {}
     }
-  
+
     html += `
       <div class="review-item">Date: ${prod.delivery.date}</div>
       <div class="review-item">Time: ${formatTime(prod.delivery.time)}</div>
@@ -632,14 +677,14 @@ function updateProductDelivery(pIdx, field, value) {
 }
 
 function updateDecorationDelivery(pIdx, subField, value) {
-    const prod = orderData.selectedProducts[pIdx];
-    let addrObj = {venue:"", address:"", floor:"", room:""};
-    try {
-        addrObj = JSON.parse(prod.delivery.address);
-    } catch (e) {}
-    
-    addrObj[subField] = value;
-    prod.delivery.address = JSON.stringify(addrObj);
+  const prod = orderData.selectedProducts[pIdx];
+  let addrObj = { venue: "", address: "", floor: "", room: "" };
+  try {
+    addrObj = JSON.parse(prod.delivery.address);
+  } catch (e) {}
+
+  addrObj[subField] = value;
+  prod.delivery.address = JSON.stringify(addrObj);
 }
 
 function formatTime(timeStr) {
@@ -715,10 +760,10 @@ function showPage(num) {
   }
 
   currentPage = num;
-  
+
   // Theme reset for global pages
   if (num === 1 || num === 5) {
-      setTheme(null); // Revert to brand default
+    setTheme(null); // Revert to brand default
   }
 
   updateProgressBar(num);
@@ -752,14 +797,19 @@ function prepareWhatsApp() {
           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
             sz.size
           }) - Event: ${ev} - Color: ${it.color}\nGuests: ${it.guestList}`;
-
         } else if (prod.type === "signature") {
           let desc = "";
-          if (sz.size === "Yoona") desc = `Main: ${it.mainFlower || '-'}, Color: ${it.color}`;
-          else if (sz.size === "Marii" || sz.size === "Bomi") desc = `Color: ${it.color}, Basket: ${it.basketColor}`;
-          else if (sz.size === "Bloom box") desc = `Color: ${it.color}, Wrap: ${it.wrapColor}`;
-          else if (sz.size === "Acrylic Bloom box") desc = `Color: ${it.color}, Acrylic Details Included`;
-          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${sz.size}) - ${desc}`;
+          if (sz.size === "Yoona")
+            desc = `Main: ${it.mainFlower || "-"}, Color: ${it.color}`;
+          else if (sz.size === "Marii" || sz.size === "Bomi")
+            desc = `Color: ${it.color}, Basket: ${it.basketColor}`;
+          else if (sz.size === "Bloom box")
+            desc = `Color: ${it.color}, Wrap: ${it.wrapColor}`;
+          else if (sz.size === "Acrylic Bloom box")
+            desc = `Color: ${it.color}, Acrylic Details Included`;
+          message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
+            sz.size
+          }) - ${desc}`;
         } else {
           message += `${productEmojis[prod.type]} ${formatName(prod.type)} (${
             sz.size
@@ -787,3 +837,105 @@ function prepareWhatsApp() {
     window.open(whatsappUrl, "_blank");
   };
 }
+
+// --- Delivery Options Logic ---
+
+function checkDeliveryZone(address) {
+  if (!address) return "outside";
+  const lower = address.toLowerCase();
+  // "Malang Raya" check: Kota Malang, Kabupaten Malang, Kota Batu
+  if (
+    lower.includes("kota malang") ||
+    lower.includes("kabupaten malang") ||
+    lower.includes("kota batu")
+  ) {
+    return "malang_raya";
+  }
+  return "outside";
+}
+
+function renderDeliveryOptions(address) {
+  const wrapper = document.getElementById("deliveryOptionsWrapper");
+  const container = document.getElementById("deliveryOptionsList");
+  const feeInfo = document.getElementById("deliveryFeeInfo");
+
+  if (!wrapper || !container) return;
+
+  const currentProduct =
+    orderData.selectedProducts[orderData.selectedProducts.length - 1];
+
+  // Hide for decoration
+  if (currentProduct && currentProduct.type === "decoration") {
+    wrapper.style.display = "none";
+    return;
+  }
+
+  if (!address) {
+    wrapper.style.display = "none";
+    container.innerHTML = "";
+    return;
+  }
+
+  const zone = checkDeliveryZone(address);
+  let options = [];
+
+  if (zone === "malang_raya") {
+    options = [
+      { id: "Self-pickup", label: "Self-pickup", fee: false },
+      {
+        id: "Grabsend",
+        label: "Grabsend (Delivery fee charged separately)",
+        fee: true,
+      },
+      {
+        id: "Gosend",
+        label: "Gosend (Delivery fee charged separately)",
+        fee: true,
+      },
+    ];
+  } else {
+    options = [
+      { id: "JNT", label: "JNT", fee: true },
+      { id: "Shopee", label: "Shopee", fee: true },
+    ];
+  }
+
+  container.innerHTML = "";
+  wrapper.style.display = "block";
+
+  const existingMethod = currentProduct.delivery?.method;
+
+  options.forEach((opt) => {
+    const div = document.createElement("div");
+    div.className = "radio-item";
+    div.style.marginBottom = "8px"; // Add some spacing
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "deliveryMethod";
+    input.id = opt.id;
+    input.value = opt.id;
+    if (existingMethod === opt.id) input.checked = true;
+
+    // Style label to look nice
+    const label = document.createElement("label");
+    label.htmlFor = opt.id;
+    label.innerText = opt.label;
+    label.style.marginLeft = "8px";
+    label.style.cursor = "pointer";
+
+    div.appendChild(input);
+    div.appendChild(label);
+    container.appendChild(div);
+  });
+
+  if (feeInfo) {
+    feeInfo.innerText =
+      "* Delivery fee will be informed via WhatsApp (except for Self-pickup).";
+  }
+}
+
+// Hook into address updates
+window.onAddressUpdated = function (address) {
+  renderDeliveryOptions(address);
+};

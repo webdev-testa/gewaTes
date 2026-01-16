@@ -10,11 +10,14 @@
       type="image/png"
     />
     <link rel="stylesheet" href="style.css" />
-
   </head>
   <body>
     <div class="container">
-      <img src="Form Assets/Banner Cover/Header Gform (1).png" class="banner-img" alt="Banner">
+      <img
+        src="Form Assets/Banner Cover/Header Gform (1).png"
+        class="banner-img"
+        alt="Banner"
+      />
       <div class="card">
         <div class="progress-bar">
           <div class="progress-fill" id="progressBar"></div>
@@ -62,31 +65,46 @@
             <div class="product-grid" id="productGrid">
               <div class="product-card" data-product="bouquet">
                 <div class="product-img">
-                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Bouquet By Gewa.png" alt="Bouquet">
+                  <img
+                    src="Form Assets/Aset Foto Jenis Lini Produk/Bouquet By Gewa.png"
+                    alt="Bouquet"
+                  />
                 </div>
                 <div class="product-label">Bouquet</div>
               </div>
               <div class="product-card" data-product="vase">
                 <div class="product-img">
-                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Vase by gewa.png" alt="Vase">
+                  <img
+                    src="Form Assets/Aset Foto Jenis Lini Produk/Vase by gewa.png"
+                    alt="Vase"
+                  />
                 </div>
                 <div class="product-label">Vase</div>
               </div>
               <div class="product-card" data-product="signature">
                 <div class="product-img">
-                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Signature By Gewa.png" alt="Signature">
+                  <img
+                    src="Form Assets/Aset Foto Jenis Lini Produk/Signature By Gewa.png"
+                    alt="Signature"
+                  />
                 </div>
                 <div class="product-label">Signature</div>
               </div>
               <div class="product-card" data-product="hand-bouquet">
                 <div class="product-img">
-                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Hand Bouquet By Gewa Cover.png" alt="Hand Bouquet">
+                  <img
+                    src="Form Assets/Aset Foto Jenis Lini Produk/Hand Bouquet By Gewa Cover.png"
+                    alt="Hand Bouquet"
+                  />
                 </div>
                 <div class="product-label">Hand Bouquet</div>
               </div>
               <div class="product-card" data-product="decoration">
                 <div class="product-img">
-                  <img src="Form Assets/Aset Foto Jenis Lini Produk/Decoration By Gewa.png" alt="Decoration">
+                  <img
+                    src="Form Assets/Aset Foto Jenis Lini Produk/Decoration By Gewa.png"
+                    alt="Decoration"
+                  />
                 </div>
                 <div class="product-label">Decoration</div>
               </div>
@@ -147,12 +165,10 @@
           </div>
         </div>
 
-    <!-- Page 3 Signature: Signature Specific Order -->
+        <!-- Page 3 Signature: Signature Specific Order -->
         <div class="page" id="page3-signature">
           <h1>Signature Order Details</h1>
-          <p class="description">
-            Customize your signature arrangement.
-          </p>
+          <p class="description">Customize your signature arrangement.</p>
 
           <div id="signatureSpecifications"></div>
 
@@ -171,67 +187,180 @@
             When and where should we deliver your order?
           </p>
 
-          <div class="form-group" id="sameDeliveryGroup" style="display: none;">
-            <input type="checkbox" id="sameDelivery" onchange="toggleSameDelivery()" />
-            <label for="sameDelivery" style="display:inline; font-weight:normal;">Same delivery details as first product</label>
+          <div class="form-group" id="sameDeliveryGroup" style="display: none">
+            <input
+              type="checkbox"
+              id="sameDelivery"
+              onchange="toggleSameDelivery()"
+            />
+            <label
+              for="sameDelivery"
+              style="display: inline; font-weight: normal"
+              >Same delivery details as first product</label
+            >
           </div>
 
           <div class="date-time-row">
             <div class="form-group">
               <label>Delivery Date *</label>
               <p id="deliveryDateInfo" class="info-text"></p>
-              <input type="date" id="deliveryDate" required placeholder="Select Date" />
+              <input
+                type="date"
+                id="deliveryDate"
+                required
+                placeholder="Select Date"
+              />
             </div>
 
             <div class="form-group">
               <label>Delivery Time *</label>
-              <input type="time" id="deliveryTime" required placeholder="Select Time" />
+              <input
+                type="time"
+                id="deliveryTime"
+                required
+                placeholder="Select Time"
+              />
             </div>
           </div>
 
           <!-- Map Integration Section -->
           <div class="form-group">
             <label>Address</label>
-            <p class="map-instruction" style="margin: 0 0 10px 0; color: #718096; font-size: 0.9em;">Move the pin to the exact drop-off spot.</p>
-            
+            <p
+              class="map-instruction"
+              style="margin: 0 0 10px 0; color: #718096; font-size: 0.9em"
+            >
+              Move the pin to the exact drop-off spot.
+            </p>
+
             <div class="map-container">
-                <div class="search-box-wrapper">
-                    <input id="pac-input" class="controls" type="text" placeholder="Search Address">
-                    <div id="search-icon" class="search-icon">
-                        <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" fill="#718096"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
-                    </div>
-                    <button id="clear-search" class="clear-search-btn" onclick="clearSearchBox()" title="Clear" style="display:none;">✕</button>
+              <div class="search-box-wrapper">
+                <input
+                  id="pac-input"
+                  class="controls"
+                  type="text"
+                  placeholder="Search Address"
+                />
+                <div id="search-icon" class="search-icon">
+                  <svg
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    fill="#718096"
+                  >
+                    <path
+                      d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                    ></path>
+                  </svg>
                 </div>
-                <div id="map"></div>
+                <button
+                  id="clear-search"
+                  class="clear-search-btn"
+                  onclick="clearSearchBox()"
+                  title="Clear"
+                  style="display: none"
+                >
+                  ✕
+                </button>
+              </div>
+              <div id="map"></div>
             </div>
           </div>
 
           <div class="form-group" id="std-address-group">
-            <label>Address Details <span style="font-weight: normal; font-size: 0.85em; color: #718096; margin-left: 4px;">(Floor, Unit number, etc.)</span></label>
-            <input type="text" id="addressDetails" placeholder="e.g. Lt 2, Unit 5B" style="margin-bottom: 10px;" />
-            
-            <div style="margin-bottom: 10px;">
-                <input type="checkbox" id="manualAddressToggle" onchange="toggleManualAddress()">
-                <label for="manualAddressToggle" style="display:inline; font-weight:normal; font-size: 0.9em;">I want to correct the address manually</label>
+            <label
+              >Address Details
+              <span
+                style="
+                  font-weight: normal;
+                  font-size: 0.85em;
+                  color: #718096;
+                  margin-left: 4px;
+                "
+                >(Floor, Unit number, etc.)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="addressDetails"
+              placeholder="e.g. Lt 2, Unit 5B"
+              style="margin-bottom: 10px"
+            />
+
+            <div style="margin-bottom: 10px">
+              <input
+                type="checkbox"
+                id="manualAddressToggle"
+                onchange="toggleManualAddress()"
+              />
+              <label
+                for="manualAddressToggle"
+                style="display: inline; font-weight: normal; font-size: 0.9em"
+                >I want to correct the address manually</label
+              >
             </div>
 
             <textarea
               id="deliveryAddress"
               rows="3"
               placeholder="Type your full address here..."
-              style="display: none;"
+              style="display: none"
             ></textarea>
-            <p id="selectedAddressDisplay" style="color: #4a5568; font-size: 0.9em; font-style: italic; margin-top: 5px;">No address selected from map.</p>
+            <p
+              id="selectedAddressDisplay"
+              style="
+                color: #4a5568;
+                font-size: 0.9em;
+                font-style: italic;
+                margin-top: 5px;
+              "
+            >
+              No address selected from map.
+            </p>
+          </div>
+
+          <!-- Dynamic Delivery Options Container -->
+          <div
+            id="deliveryOptionsWrapper"
+            style="display: none; margin-top: 20px"
+          >
+            <label>Choose Delivery Method *</label>
+            <div id="deliveryOptionsList" class="radio-group">
+              <!-- Options injected by JS -->
+            </div>
+            <p
+              id="deliveryFeeInfo"
+              style="margin-top: 10px; font-size: 0.9em; color: #555"
+            >
+              <!-- Fee info injected by JS -->
+            </p>
           </div>
 
           <!-- Decoration Specific Delivery Fields -->
-          <div id="decorationDeliveryFields" style="display: none;">
+          <div id="decorationDeliveryFields" style="display: none">
             <div class="form-group">
-                <label>📍 Alamat Venue *</label>
-                <input type="text" id="decVenueName" placeholder="Nama Venue, contoh: Nomu Cafe" style="margin-bottom:8px;" />
-                <input type="text" id="decVenueAddress" placeholder="Alamat Venue" style="margin-bottom:8px;" />
-                <input type="text" id="decVenueFloor" placeholder="Lantai" style="margin-bottom:8px;" />
-                <input type="text" id="decVenueRoom" placeholder="Ruangan" />
+              <label>📍 Alamat Venue *</label>
+              <input
+                type="text"
+                id="decVenueName"
+                placeholder="Nama Venue, contoh: Nomu Cafe"
+                style="margin-bottom: 8px"
+              />
+              <input
+                type="text"
+                id="decVenueAddress"
+                placeholder="Alamat Venue"
+                style="margin-bottom: 8px"
+              />
+              <input
+                type="text"
+                id="decVenueFloor"
+                placeholder="Lantai"
+                style="margin-bottom: 8px"
+              />
+              <input type="text" id="decVenueRoom" placeholder="Ruangan" />
             </div>
           </div>
 
@@ -298,9 +427,43 @@
     </div>
     <script src="js/config.js"></script>
     <script>
-      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      ((g) => {
+        var h,
+          a,
+          k,
+          p = "The Google Maps JavaScript API",
+          c = "google",
+          l = "importLibrary",
+          q = "__ib__",
+          m = document,
+          b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}),
+          r = new Set(),
+          e = new URLSearchParams(),
+          u = () =>
+            h ||
+            (h = new Promise(async (f, n) => {
+              await (a = m.createElement("script"));
+              e.set("libraries", [...r] + "");
+              for (k in g)
+                e.set(
+                  k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+                  g[k]
+                );
+              e.set("callback", c + ".maps." + q);
+              a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+              d[q] = f;
+              a.onerror = () => (h = n(Error(p + " could not load.")));
+              a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+              m.head.append(a);
+            }));
+        d[l]
+          ? console.warn(p + " only loads once. Ignoring:", g)
+          : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+      })({
         key: GOOGLE_MAPS_API_KEY,
-        v: "weekly"
+        v: "weekly",
       });
     </script>
     <script src="js/initMap.js"></script>
@@ -312,6 +475,5 @@
     <script src="js/pages/decoration-flow.js"></script>
     <script src="js/pages/signature-flow.js"></script>
     <script src="js/script.js"></script>
-
   </body>
 </html>

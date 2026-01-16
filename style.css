@@ -795,3 +795,78 @@ gmp-place-autocomplete {
         margin: 0 0 16px 0;
     }
 }
+
+/* Delivery Options Styling */
+#deliveryOptionsWrapper h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-color);
+}
+
+.delivery-option-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: white;
+}
+
+.delivery-option-card:hover {
+    border-color: var(--primary-color);
+    background-color: #fffafb;
+}
+
+.delivery-option-card.selected {
+    border-color: var(--primary-color);
+    background-color: #fff0f5;
+    box-shadow: 0 2px 4px rgba(231, 76, 137, 0.1);
+}
+
+.delivery-option-card input[type='radio'] {
+    margin-top: 4px;
+    accent-color: var(--primary-color);
+    width: 18px;
+    height: 18px;
+}
+
+.delivery-content {
+    flex: 1;
+}
+
+.delivery-title {
+    font-weight: 600;
+    font-size: 1em;
+    color: var(--text-color);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.delivery-desc {
+    font-size: 0.9em;
+    color: #718096;
+    line-height: 1.4;
+}
+
+.delivery-price {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.fee-info {
+    font-size: 0.85em;
+    color: #718096;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f7fafc;
+    border-radius: 6px;
+    border-left: 3px solid #cbd5e0;
+}
