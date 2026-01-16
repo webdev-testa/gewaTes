@@ -881,22 +881,26 @@ function renderDeliveryOptions(address) {
 
   if (zone === "malang_raya") {
     options = [
-      { id: "Self-pickup", label: "Self-pickup", fee: false },
+      {
+        id: "Self-pickup",
+        label: "Self-pickup",
+        sub: "byGewa (Jl. blabla No. 123)",
+      },
       {
         id: "Grabsend",
-        label: "Grabsend (Delivery fee charged separately)",
-        fee: true,
+        label: "Grabsend",
+        sub: "Delivery fee charged separately",
       },
       {
         id: "Gosend",
-        label: "Gosend (Delivery fee charged separately)",
-        fee: true,
+        label: "Gosend",
+        sub: "Delivery fee charged separately",
       },
     ];
   } else {
     options = [
-      { id: "JNT", label: "JNT", fee: true },
-      { id: "Shopee", label: "Shopee", fee: true },
+      { id: "JNT", label: "JNT", sub: "Delivery fee charged separately" },
+      { id: "Shopee", label: "Shopee", sub: "Delivery fee charged separately" },
     ];
   }
 
@@ -908,30 +912,63 @@ function renderDeliveryOptions(address) {
   options.forEach((opt) => {
     const div = document.createElement("div");
     div.className = "radio-item";
-    div.style.marginBottom = "8px"; // Add some spacing
+    // Flex container for alignment
+    div.style.display = "flex";
+    div.style.alignItems = "flex-start"; // Align top so multi-line text doesn't center the radio
+    div.style.marginBottom = "12px";
+    div.style.cursor = "pointer";
 
+    // Radio Input
     const input = document.createElement("input");
     input.type = "radio";
     input.name = "deliveryMethod";
     input.id = opt.id;
     input.value = opt.id;
+    input.style.marginTop = "4px"; // Slight offset to align with text cap-height
+    input.style.cursor = "pointer";
     if (existingMethod === opt.id) input.checked = true;
 
-    // Style label to look nice
+    // Text container
+    const textDiv = document.createElement("div");
+    textDiv.style.marginLeft = "10px";
+
+    // Main Label
     const label = document.createElement("label");
     label.htmlFor = opt.id;
     label.innerText = opt.label;
-    label.style.marginLeft = "8px";
+    label.style.display = "block";
+    label.style.fontWeight = "600";
     label.style.cursor = "pointer";
+    label.style.marginBottom = "2px";
+    label.style.color = "#2d3748";
+
+    // Subtitle (Fee Info)
+    const sub = document.createElement("div");
+    sub.style.fontSize = "0.9em"; // Similar to map-instruction
+    sub.style.color = "#718096"; // Grey color like map-instruction
+    sub.innerText = opt.sub;
+
+    textDiv.appendChild(label);
+    if (opt.sub) {
+      textDiv.appendChild(sub);
+    }
 
     div.appendChild(input);
-    div.appendChild(label);
+    div.appendChild(textDiv);
+
+    // Allow clicking the whole row to select
+    div.onclick = function (e) {
+      if (e.target !== input) {
+        input.checked = true;
+      }
+    };
+
     container.appendChild(div);
   });
 
   if (feeInfo) {
-    feeInfo.innerText =
-      "* Delivery fee will be informed via WhatsApp (except for Self-pickup).";
+    // Clear the global footer fee info since we moved it to per-item subtitles
+    feeInfo.innerText = "* Rate will be shared from WhatsApp by admin By Gewa.";
   }
 }
 
