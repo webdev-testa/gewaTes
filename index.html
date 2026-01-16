@@ -401,6 +401,18 @@
 
           <div id="orderReview"></div>
 
+          <p
+            class="description"
+            style="
+              text-align: center;
+              margin-top: 20px;
+              color: #555;
+              font-size: 0.9em;
+            "
+          >
+            Once saved, you will be redirected to WhatsApp to finalize your
+            order.
+          </p>
           <button
             class="btn btn-primary"
             id="btnSubmit"
@@ -412,17 +424,40 @@
         </div>
 
         <!-- Page 7: Thank You -->
+        <!-- Page 7: Thank You / Warning -->
         <div class="page" id="page7">
-          <div class="success-icon">✅</div>
-          <h1 style="text-align: center">Thank You!</h1>
-          <p class="description" style="text-align: center">
-            Your order has been received. Please confirm your order via
-            WhatsApp.
+          <div class="success-icon">⚠️</div>
+          <h1 style="text-align: center">Last Step!</h1>
+          <p
+            class="description"
+            style="text-align: center; font-weight: bold; color: #d9534f"
+          >
+            Confirm order via WhatsApp to Gewa Admin if you haven't yet
+          </p>
+          <p class="description" style="text-align: center; font-size: 0.9em">
+            Since the product will only be processed after the order is confirmed
+            via WhatsApp
           </p>
 
-          <button class="btn btn-primary" id="whatsappBtn">
-            Confirm via WhatsApp
+          <button
+            class="btn btn-primary"
+            id="whatsappBtn"
+            onclick="openWhatsApp()"
+          >
+            Open WhatsApp
           </button>
+
+          <p
+            class="description"
+            style="
+              text-align: center;
+              margin-top: 30px;
+              font-size: 0.85em;
+              color: #777;
+            "
+          >
+            Thank you for ordering!<br />byGewa
+          </p>
         </div>
       </div>
     </div>

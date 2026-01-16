@@ -756,7 +756,7 @@ function submitOrder() {
   const btn = document.getElementById("btnSubmit");
   const err = document.getElementById("errorMsg");
   btn.disabled = true;
-  btn.innerText = "Processing...";
+  btn.innerText = "Saving...";
   err.innerHTML = "";
 
   // Back End Sheet
@@ -773,10 +773,19 @@ function submitOrder() {
     },
   })
     .then(() => {
-      prepareWhatsApp();
+      // 1. Prepare URL
+      const whatsappUrl = getWhatsAppUrl();
+
+      // 2. Auto-redirect
+      const win = window.open(whatsappUrl, "_blank");
+
+      // 3. Update UI to "Last Step" Warning
       showPage(7);
       btn.innerText = "Confirm Order";
       btn.disabled = false;
+
+      // 4. Setup Manual Button (in case auto-redirect failed)
+      window.lastWhatsAppUrl = whatsappUrl;
     })
     .catch((error) => {
       err.innerText = "Network Error. Please try again.";
@@ -822,7 +831,8 @@ function updateProgressBar(num) {
   document.getElementById("progressBar").style.width = (num / 7) * 100 + "%";
 }
 
-function prepareWhatsApp() {
+// Renamed from prepareWhatsApp to getWhatsAppUrl to be clearer
+function getWhatsAppUrl() {
   // Date formatter for Indonesian locale
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -902,13 +912,12 @@ function prepareWhatsApp() {
 
   // Encode message
   const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=6285822220904&text=${encodedMessage}`;
+  return `https://api.whatsapp.com/send?phone=6285822220904&text=${encodedMessage}`;
+}
 
-  // Open WhatsApp
-  const btn = document.getElementById("whatsappBtn");
-  btn.onclick = function () {
-    window.open(whatsappUrl, "_blank");
-  };
+function openWhatsApp() {
+  const url = window.lastWhatsAppUrl || getWhatsAppUrl();
+  window.open(url, "_blank");
 }
 
 // --- Delivery Options Logic ---
@@ -957,7 +966,7 @@ function renderDeliveryOptions(address) {
       {
         id: "Self-pickup",
         label: "Self-pickup",
-        sub: "byGewa (Jl. blabla No. 123)",
+        sub: "\u{1F4CD} byGewa at Jl. Permata Jingga IV No.12, Tunggulwulung, Kec. Lowokwaru, Kota Malang, Jawa Timur 65142",
       },
       {
         id: "Grabsend",
