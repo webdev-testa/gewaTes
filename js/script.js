@@ -347,6 +347,17 @@ function toggleSameDelivery() {
           if (displayEl) displayEl.style.display = "none";
         }
       }
+
+      // 1. Render Delivery Options based on this address
+      renderDeliveryOptions(addr);
+
+      // 2. Pre-select the method used by the first product (if applicable to this product)
+      if (firstProd.delivery.method) {
+        const radio = document.getElementById(firstProd.delivery.method);
+        if (radio) {
+          radio.checked = true;
+        }
+      }
     }
   } else {
     toggleInputState(false);
@@ -647,10 +658,38 @@ function renderProductBlock(prod, pIdx) {
             <input type="text" placeholder="Ruangan" value="${addrObj.room}" style="width:100%; border:1px solid #ddd; padding:4px;" oninput="updateDecorationDelivery(${pIdx}, 'room', this.value)">
           </div>`;
     } else {
+      // Standard Address Edit
       html += `
           <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
             <label>Address</label>
-            <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value)">${prod.delivery.address}</textarea>
+            <textarea rows="3" oninput="updateProductDelivery(${pIdx}, 'address', this.value); /* Trigger re-render to update method options? No, complex. User must save then edit again or we accept inconsistency temporarily */">${prod.delivery.address}</textarea>
+          </div>`;
+
+      // Delivery Method Edit (Standard info only)
+      const zone = checkDeliveryZone(prod.delivery.address);
+      const isMalang = zone === "malang_raya";
+      const methods = isMalang
+        ? ["Self-pickup", "Grabsend", "Gosend"]
+        : ["JNT", "Shopee"];
+
+      let optionsHtml = methods
+        .map(
+          (m) =>
+            `<option value="${m}" ${
+              prod.delivery.method === m ? "selected" : ""
+            }>${m}</option>`
+        )
+        .join("");
+
+      html += `
+          <div class="review-item" style="background:#fff; border:1px solid #e2e8f0;">
+            <label>Method</label>
+            <select style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;" onchange="updateProductDelivery(${pIdx}, 'method', this.value)">
+                <option value="" disabled ${
+                  !prod.delivery.method ? "selected" : ""
+                }>Select Method</option>
+                ${optionsHtml}
+            </select>
           </div>`;
     }
   } else {
@@ -658,14 +697,23 @@ function renderProductBlock(prod, pIdx) {
     if (prod.type === "decoration") {
       try {
         const parsed = JSON.parse(displayAddr);
-        displayAddr = `<strong>${parsed.venue}</strong><br>${parsed.address}<br>Lantai: ${parsed.floor}, Ruangan: ${parsed.room}`;
+        displayAddr = `Venue: ${parsed.venue}, Addr: ${parsed.address}`;
       } catch (e) {}
     }
 
     html += `
-      <div class="review-item">Date: ${prod.delivery.date}</div>
-      <div class="review-item">Time: ${formatTime(prod.delivery.time)}</div>
-      <div class="review-item">Address: ${displayAddr}</div>`;
+      <div class="review-item">📅 ${prod.delivery.date}</div>
+      <div class="review-item">⏰ ${formatTime(prod.delivery.time)}</div>
+      <div class="review-item">📍 ${displayAddr}</div>`;
+
+    // Show Method (if not decoration)
+    if (
+      prod.type !== "decoration" &&
+      prod.delivery.method &&
+      prod.delivery.method !== "-"
+    ) {
+      html += `<div class="review-item">📦 ${prod.delivery.method}</div>`;
+    }
   }
 
   html += `</div>`; // End Delivery Section
