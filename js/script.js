@@ -902,7 +902,7 @@ function prepareWhatsApp() {
 
   // Encode message
   const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/6285822220904?text=${encodedMessage}`;
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=6285822220904&text=${encodedMessage}`;
 
   // Open WhatsApp
   const btn = document.getElementById("whatsappBtn");
